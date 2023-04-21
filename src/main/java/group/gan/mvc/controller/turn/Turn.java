@@ -120,4 +120,6 @@ public interface Turn {
         Boolean checkPositionOccupiedByOpponent(Player player, Coordinate coordinate) throws InvalidCoordinate;
 
 
+
+
 }
