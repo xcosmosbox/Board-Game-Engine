@@ -6,6 +6,10 @@ import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.coordinate.Coordinate;
 import group.gan.mvc.model.token.Token;
 
+//the aim of this interface is: Turn is used to control the round in the game. Turn stores the player. Whenever the  Game runs a Turn, the Turn will notify the player to play with the game. After a  player has played a turn, the Turn changes who will be playing the next time.
+
+
+
 /**
  * Turn controller.
  *
