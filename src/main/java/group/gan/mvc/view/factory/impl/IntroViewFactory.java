@@ -1,16 +1,17 @@
-package group.gan.mvc.view.factory;
+package group.gan.mvc.view.factory.impl;
 
-import group.gan.mvc.view.PlacePhaseView;
+import group.gan.mvc.view.factory.ViewFactory;
+import group.gan.mvc.view.impl.IntroduceView;
 import group.gan.mvc.view.View;
 
 /**
  * @author: fengyuxiang
- * @ClassName: PlacePhaseViewFactory
+ * @ClassName: IntroViewFactory
  * @version: 1.0
  * @description:
  * @create: 21/4/2023
  */
-public class PlacePhaseViewFactory implements ViewFactory{
+public class IntroViewFactory implements ViewFactory {
     /**
      * A function for generating View
      *
@@ -18,6 +19,6 @@ public class PlacePhaseViewFactory implements ViewFactory{
      */
     @Override
     public View createView() {
-        return new PlacePhaseView();
+        return new IntroduceView();
     }
 }

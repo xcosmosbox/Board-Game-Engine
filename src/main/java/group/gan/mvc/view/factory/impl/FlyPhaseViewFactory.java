@@ -1,6 +1,7 @@
-package group.gan.mvc.view.factory;
+package group.gan.mvc.view.factory.impl;
 
-import group.gan.mvc.view.FlyPhaseView;
+import group.gan.mvc.view.factory.ViewFactory;
+import group.gan.mvc.view.impl.FlyPhaseView;
 import group.gan.mvc.view.View;
 
 /**
@@ -10,7 +11,7 @@ import group.gan.mvc.view.View;
  * @description:
  * @create: 21/4/2023
  */
-public class FlyPhaseViewFactory implements ViewFactory{
+public class FlyPhaseViewFactory implements ViewFactory {
     /**
      * A function for generating View
      *

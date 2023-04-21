@@ -1,6 +1,7 @@
-package group.gan.mvc.view;
+package group.gan.mvc.view.impl;
 
 import group.gan.mvc.model.position.Position;
+import group.gan.mvc.view.View;
 import group.gan.utils.Display;
 
 import java.text.MessageFormat;
@@ -13,7 +14,7 @@ import java.util.ResourceBundle;
  * @description:
  * @create: 21/4/2023
  */
-public class BoardView implements View{
+public class BoardView implements View {
 
     private static final String EMPTY_SLOT = "*";
     private String[] colors;

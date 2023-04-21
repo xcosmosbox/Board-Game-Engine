@@ -1,7 +1,8 @@
-package group.gan.mvc.view.factory;
+package group.gan.mvc.view.factory.impl;
 
 import group.gan.mvc.model.position.Position;
-import group.gan.mvc.view.BoardView;
+import group.gan.mvc.view.factory.ViewFactory;
+import group.gan.mvc.view.impl.BoardView;
 import group.gan.mvc.view.View;
 
 /**
@@ -11,7 +12,7 @@ import group.gan.mvc.view.View;
  * @description:
  * @create: 21/4/2023
  */
-public class BoardViewFactory implements ViewFactory{
+public class BoardViewFactory implements ViewFactory {
 
     BoardView boardView;
 

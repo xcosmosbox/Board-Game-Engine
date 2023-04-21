@@ -1,5 +1,6 @@
-package group.gan.mvc.view;
+package group.gan.mvc.view.impl;
 
+import group.gan.mvc.view.View;
 import group.gan.utils.Display;
 
 /**
@@ -9,7 +10,7 @@ import group.gan.utils.Display;
  * @description:
  * @create: 21/4/2023
  */
-public class FlyPhaseView implements View{
+public class FlyPhaseView implements View {
     /**
      * Drawing methods implemented by subclasses
      *
