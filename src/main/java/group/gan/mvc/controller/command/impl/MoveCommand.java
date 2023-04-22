@@ -9,17 +9,18 @@ import group.gan.mvc.controller.player.Player;
 
 /**
  * @author: fengyuxiang
- * @ClassName: QuitCommand
+ * @ClassName: MoveCommand
  * @version: 1.0
  * @description:
  * @create: 22/4/2023
  */
-public class QuitCommand implements Command {
+public class MoveCommand implements Command {
 
-    private CommandType commandType = CommandType.QUIT;
+    private CommandType commandType = CommandType.MOVE;
     private Game game;
-    private Board board;
     private Player player;
+    private Board board;
+    private MoveStrategy moveStrategy;
 
     /**
      * A set of functions with execution
@@ -30,7 +31,7 @@ public class QuitCommand implements Command {
      */
     @Override
     public Boolean execute(Player player, Board board) {
-        return null;
+        return moveStrategy.executeStrategy(player, board);
     }
 
     /**
@@ -40,8 +41,7 @@ public class QuitCommand implements Command {
      */
     @Override
     public Boolean execute() {
-        game.quit();
-        return true;
+        return moveStrategy.executeStrategy(player, board);
     }
 
     /**
@@ -141,6 +141,6 @@ public class QuitCommand implements Command {
      */
     @Override
     public void initMoveStrategy(MoveStrategy moveStrategy) {
-
+        this.moveStrategy = moveStrategy;
     }
 }
