@@ -2,6 +2,7 @@ package group.gan.mvc.model.position.impl;
 
 import group.gan.mvc.model.position.Position;
 import group.gan.mvc.model.token.Token;
+import group.gan.mvc.model.token.impl.TokenImpl;
 
 import java.util.Stack;
 
@@ -28,7 +29,8 @@ public class PositionImpl implements Position {
      */
     @Override
     public Token peekToken() {
-        return token.peek();
+        Token unmodifiableToken = new TokenImpl(token.peek().getOwner(),token.peek().getSymbol());
+        return unmodifiableToken;
     }
 
     /**
