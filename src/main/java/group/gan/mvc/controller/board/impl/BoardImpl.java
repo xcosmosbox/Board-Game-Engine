@@ -138,7 +138,7 @@ public class BoardImpl implements Board {
      * @throws InvalidCoordinate
      */
     @Override
-    public void PlaceToken(Token token, Coordinate coordinate) throws InvalidCoordinate {
+    public void placeToken(Token token, Coordinate coordinate) throws InvalidCoordinate {
         if (checkPositionValid(coordinate) && checkPositionIsEmpty(coordinate)){
             boardModel.addOneTokenIntoPosition(token, parsePosition(coordinate));
         }
@@ -152,7 +152,7 @@ public class BoardImpl implements Board {
      * @throws InvalidCoordinate
      */
     @Override
-    public void MoveToken(Coordinate from, Coordinate to) throws InvalidCoordinate {
+    public void moveToken(Coordinate from, Coordinate to) throws InvalidCoordinate {
         if (checkPositionValid(from) && checkPositionValid(to)
                 && checkMoveValid(from, to)
                 && !checkPositionIsEmpty(from) && checkPositionIsEmpty(to)){
@@ -170,7 +170,7 @@ public class BoardImpl implements Board {
      * @throws InvalidCoordinate
      */
     @Override
-    public void RemoveToken(Player player, Coordinate coordinate) throws InvalidCoordinate {
+    public void removeToken(Player player, Coordinate coordinate) throws InvalidCoordinate {
         // (Sprint2 does not test this)
     }
 
