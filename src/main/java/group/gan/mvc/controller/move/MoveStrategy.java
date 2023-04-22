@@ -14,4 +14,6 @@ public interface MoveStrategy {
      * @return Criteria for successful operation
      */
     Boolean executeStrategy(Player player, Board board);
+
+    void initDescription(Player player);
 }

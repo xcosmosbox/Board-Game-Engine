@@ -26,7 +26,7 @@ public interface Board {
      * @param coordinate
      * @throws InvalidCoordinate
      */
-    void PlaceToken(Token token, Coordinate coordinate) throws InvalidCoordinate;
+    void placeToken(Token token, Coordinate coordinate) throws InvalidCoordinate;
 
     /**
      * Players can move token on the board
@@ -34,7 +34,7 @@ public interface Board {
      * @param to
      * @throws InvalidCoordinate
      */
-    void MoveToken(Coordinate from, Coordinate to) throws InvalidCoordinate;
+    void moveToken(Coordinate from, Coordinate to) throws InvalidCoordinate;
 
     /**
      * Players can remove one token from the board
@@ -42,7 +42,7 @@ public interface Board {
      * @param coordinate
      * @throws InvalidCoordinate
      */
-    void RemoveToken(Player player, Coordinate coordinate) throws InvalidCoordinate;
+    void removeToken(Player player, Coordinate coordinate) throws InvalidCoordinate;
 
     /**
      * Check whether the Coordinate is within the allowed range of the chessboard

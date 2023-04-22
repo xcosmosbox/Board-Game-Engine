@@ -24,7 +24,7 @@ public class Display {
     public void displayFormattedView(String str){
         String msg = String.format("%3s"," ");
         msg += str;
-        System.out.println(msg);
+        System.out.print(msg);
 
     }
 
@@ -35,6 +35,6 @@ public class Display {
     public void displayMessage(String str){
         String msg = String.format("%3s"," ");
         msg += str;
-        System.out.println(msg);
+        System.out.print(msg);
     }
 }

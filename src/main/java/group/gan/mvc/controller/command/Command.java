@@ -2,6 +2,7 @@ package group.gan.mvc.controller.command;
 
 import group.gan.mvc.controller.board.Board;
 import group.gan.mvc.controller.game.Game;
+import group.gan.mvc.controller.move.MoveStrategy;
 import group.gan.mvc.controller.player.Player;
 
 /**
@@ -74,4 +75,10 @@ public interface Command {
      * @return
      */
     CommandType getCommandType();
+
+    /**
+     * initialize move strategy
+     * @param moveStrategy
+     */
+    void initMoveStrategy(MoveStrategy moveStrategy);
 }

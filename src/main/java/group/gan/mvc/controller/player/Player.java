@@ -41,6 +41,18 @@ public interface Player {
      */
     String getPlayerName();
 
+    /**
+     * The player returns a number according to the prompt
+     * @return
+     */
+    Integer requestOneIntegerInput();
+
+    /**
+     * The player returns a list numbers according to the prompt
+     * @return
+     */
+    Integer[] requestIntegersInput();
+
 
 
 
