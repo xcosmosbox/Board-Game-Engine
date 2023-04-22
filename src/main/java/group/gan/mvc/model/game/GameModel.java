@@ -1,6 +1,8 @@
 package group.gan.mvc.model.game;
 
+import group.gan.mvc.controller.board.Board;
 import group.gan.mvc.controller.player.Player;
+import group.gan.mvc.controller.turn.Turn;
 
 /**
  * GameModel is used to save some data in the game and verify the state of the game itself.
@@ -9,6 +11,55 @@ import group.gan.mvc.controller.player.Player;
  * However, it has the implementation of advanced functions with reserved interfaces. (our group didn't have to implement it)
  */
 public interface GameModel {
+
+    /**
+     * setter for Turn manager
+     * @param turn
+     */
+    void setTurn(Turn turn);
+
+    /**
+     * getter for Turn manager
+     * @return
+     */
+    Turn getTurn();
+
+    /**
+     * setter for players
+     * @param players
+     */
+    void setPlayers(Player... players);
+
+    /**
+     * setter for player
+     * @param player
+     */
+    void setPlayer(Player player);
+
+    /**
+     * getter for player
+     * @return
+     */
+    Player getPlayer();
+
+    /**
+     * getter for players
+     * @return
+     */
+    Player[] getPlayers();
+
+    /**
+     * setter for board
+     * @param board
+     */
+    void setBoard(Board board);
+
+    /**
+     * getter for board
+     * @return
+     */
+    Board getBoard();
+
 
     /**
      * return winner
