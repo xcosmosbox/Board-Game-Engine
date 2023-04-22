@@ -60,18 +60,6 @@ public interface PlayerModel {
     Command getCommandBuilder();
 
     /**
-     * get AI input
-     * @return
-     */
-    String getAIInput();
-
-    /**
-     * set AI input
-     * @param input
-     */
-    void setAIInput(String input);
-
-    /**
      * get the uid of the player
      * @return
      */
@@ -107,11 +95,12 @@ public interface PlayerModel {
      */
     Token removeOneToken();
 
-    /**
-     * inject tokens
-     * @param tokens
-     */
-    void tokensInjection(Token[] tokens);
+
+
+
+
+
+
 
 
 

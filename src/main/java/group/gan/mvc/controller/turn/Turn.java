@@ -2,6 +2,7 @@ package group.gan.mvc.controller.turn;
 
 
 import group.gan.exception.InvalidCoordinate;
+import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.coordinate.Coordinate;
 import group.gan.mvc.model.token.Token;
@@ -25,99 +26,53 @@ import group.gan.mvc.model.token.Token;
 public interface Turn {
 
         /**
-        * Players can place token on the board
-        * @param token
-        * @param coordinate
-        * @throws InvalidCoordinate
-        */
-        void PlaceToken(Token token, Coordinate coordinate) throws InvalidCoordinate;
-
-        /**
-        * Players can move token on the board
-        * @param from
-        * @param to
-        * @throws InvalidCoordinate
-        */
-        void MoveToken(Coordinate from, Coordinate to) throws InvalidCoordinate;
-
-        /**
-        * Players can remove one token from the board
-        * @param player
-        * @param coordinate
-        * @throws InvalidCoordinate
-        */
-        void RemoveToken(Player player, Coordinate coordinate) throws InvalidCoordinate;
-
-        /**
-        * Check whether the Coordinate is within the allowed range of the chessboard
-        * @param coordinate
-        * @return
-        */
-        Boolean checkPositionValid(Coordinate coordinate);
-
-        /**
-        * Check whether the Move operation is in compliance with the rules
-        * (Sprint2 does not test this)
-        * @param from
-        * @param to
-        * @return
-        * @throws InvalidCoordinate
-        */
-        Boolean checkMoveValid(Coordinate from, Coordinate to) throws InvalidCoordinate;
-
-        /**
-        * Check whether the Remove operation is in compliance with the rules
-        * (Sprint2 does not test this)
-        * @param player
-        * @param coordinate
-        * @return
-        * @throws InvalidCoordinate
-        */
-        Boolean checkRemoveValid(Player player, Coordinate coordinate) throws InvalidCoordinate;
-
-        /**
-        * Check whether the Place operation is in compliance with the rules
-        * (Sprint2 does not test this)
-        * @param token
-        * @param coordinate
-        * @return
-        * @throws InvalidCoordinate
-        */
-        Boolean checkPlaceValid(Token token, Coordinate coordinate) throws InvalidCoordinate;
-
-        /**
-        * Check whether the Coordinate is occupied
-        * @param coordinate
-        * @return
-        * @throws InvalidCoordinate
-        */
-        Boolean checkPositionOccupied(Coordinate coordinate) throws InvalidCoordinate;
-
-        /**
-        * Check whether the Coordinate is empty
-        * @param coordinate
-        * @return
-        * @throws InvalidCoordinate
-        */
-        Boolean checkPositionEmpty(Coordinate coordinate) throws InvalidCoordinate;
-
-        /**
-        * Check whether the Coordinate is occupied by the player
-        * @ param player
-         * @param coordinate
+         * run the turn
          * @return
-         * @throws InvalidCoordinate
          */
-        Boolean checkPositionOccupiedByPlayer(Player player, Coordinate coordinate) throws InvalidCoordinate;
+        Command runTurn();
 
         /**
-         * Check whether the Coordinate is occupied by the opponent
-         * @param player
-         * @param coordinate
+         * after the turn, make player keep running the turn
          * @return
-         * @throws InvalidCoordinate
          */
-        Boolean checkPositionOccupiedByOpponent(Player player, Coordinate coordinate) throws InvalidCoordinate;
+        Command continueRun();
+
+
+        /**
+         * when we get a invalid command, we will send a command with the same type command.
+         * @return
+         */
+        Command refillCommand();
+
+
+        /**
+         * get the pollable instance
+         * @return
+         */
+        Pollable getPollableInstance();
+
+        /**
+         * switch the pollable object
+         */
+        void switchPollableObject();
+
+        /**
+         * register the pollable object
+         * @param pollable
+         */
+        void registerPollableObject(Pollable pollable);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -35,6 +35,14 @@ public interface Player {
      */
     Token getOneToken();
 
+    /**
+     * get the player name
+     * @return
+     */
+    String getPlayerName();
+
+
+
 
 
 
