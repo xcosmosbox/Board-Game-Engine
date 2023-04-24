@@ -36,10 +36,7 @@ public interface PlayerModel {
      */
     void setState(PlayerStateEnum state);
 
-    /**
-     * update the state of the player
-     */
-    void updateState();
+
 
     /**
      * update the state of the player
