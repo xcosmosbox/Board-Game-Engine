@@ -43,6 +43,12 @@ public interface Player {
     String getPlayerName();
 
     /**
+     * get player state
+     * @return
+     */
+    PlayerStateEnum getPlayerState();
+
+    /**
      * The player returns a number according to the prompt
      * @return
      */

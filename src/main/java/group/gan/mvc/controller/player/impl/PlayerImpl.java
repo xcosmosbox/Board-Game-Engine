@@ -27,14 +27,12 @@ public class PlayerImpl implements Player, Pollable {
 
     @Override
     public Command play() {
-        // Implement your game logic here and return a Command object.
-        // You might need to interact with playerModel or other components.
         return null;
     }
 
     @Override
     public void setStateManager(PlayerModel playerModel) {
-        // Implement the logic to set the state manager for this player.
+        // a injection interface for player model
     }
 
     @Override
@@ -50,6 +48,16 @@ public class PlayerImpl implements Player, Pollable {
     @Override
     public String getPlayerName() {
         return playerModel.getPlayerName();
+    }
+
+    /**
+     * get player state
+     *
+     * @return
+     */
+    @Override
+    public PlayerStateEnum getPlayerState() {
+        return playerModel.getState();
     }
 
     @Override

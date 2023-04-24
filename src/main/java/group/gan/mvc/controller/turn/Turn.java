@@ -31,9 +31,10 @@ public interface Turn {
 
         /**
          * when we get a invalid command, we will send a command with the same type command.
-         * @return
+         * @param command one command
+         * @return refill command
          */
-        Command refillCommand();
+        Command refillCommand(Command command);
 
 
         /**

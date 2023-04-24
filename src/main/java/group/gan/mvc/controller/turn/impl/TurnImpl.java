@@ -2,38 +2,39 @@ package group.gan.mvc.controller.turn.impl;
 
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.controller.command.CommandType;
-import group.gan.mvc.controller.command.factory.CommandFactory;
 import group.gan.mvc.controller.command.factory.impl.MoveCommandFactory;
+import group.gan.mvc.controller.command.factory.impl.QuitCommandFactory;
 import group.gan.mvc.controller.turn.Pollable;
 import group.gan.mvc.controller.turn.Turn;
+import group.gan.mvc.view.factory.FacViewFactory;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 public class TurnImpl implements Turn {
 
-    private Queue<Pollable> pollableObjects;
+    private Queue<Pollable> pollableQueue;
     private Pollable currentPollable;
-    MoveCommandFactory move = new MoveCommandFactory();
+    MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
+    QuitCommandFactory quitCommandFactory = new QuitCommandFactory();
 
 
     public TurnImpl() {
-        pollableObjects = new LinkedList<>();
+        pollableQueue = new LinkedList<>();
 
     }
 
     @Override
     public Command runTurn() {
-        currentPollable = getPollableInstance();
+        currentPollable = getCurrentPollableObject();
         if (currentPollable != null) {
-            CommandType commandType = currentPollable.poll(null);
-            Command command = move.createCommand(commandType);
-            if (command != null) {
+            CommandType commandType = currentPollable.poll(FacViewFactory.createFactory(currentPollable).createView());
+            Command command = moveCommandFactory.createCommand(commandType);
+            if (command.getCommandType() == CommandType.MOVE) {
                 Command filledCommand = currentPollable.fillCommand(command);
-                switchPollableObject();
                 return filledCommand;
+            } else {
+                return quitCommandFactory.createCommand(CommandType.QUIT);
             }
         }
         return null;
@@ -41,34 +42,51 @@ public class TurnImpl implements Turn {
 
     @Override
     public Command continueRun() {
-        return runTurn();
-    }
-
-    @Override
-    public Command refillCommand() {
-        Pollable currentPollable = getPollableInstance();
-        if (currentPollable != null) {
-            return currentPollable.fillCommand(move.createCommand(CommandType.MOVE));
-        }
+        // sprint2 does not test this
         return null;
     }
 
+    /**
+     * when we get a invalid command, we will send a command with the same type command.
+     *
+     * @param command one command
+     * @return refill command
+     */
+    @Override
+    public Command refillCommand(Command command) {
+
+        if (command.getCommandType() == CommandType.MOVE && currentPollable != null){
+            Command newCommand = moveCommandFactory.createCommand(CommandType.MOVE);
+            Command filledCommand = currentPollable.fillCommand(newCommand);
+            return filledCommand;
+        }
+
+        return null;
+    }
+
+
     @Override
     public Pollable getPollableInstance() {
-        return pollableObjects.poll();
+        return currentPollable;
 
     }
 
     @Override
     public void switchPollableObject() {
-        if (!pollableObjects.isEmpty()) {
-            pollableObjects.offer(currentPollable);
-            currentPollable = pollableObjects.poll();
-        }
+        pollableQueue.offer(currentPollable);
+        currentPollable = pollableQueue.poll();
     }
 
     @Override
     public void registerPollableObject(Pollable pollable) {
-        pollableObjects.offer(pollable);
+        pollableQueue.offer(pollable);
+    }
+
+    private Pollable getCurrentPollableObject(){
+        if (currentPollable == null){
+            currentPollable = pollableQueue.poll();
+        }
+
+        return currentPollable;
     }
 }
