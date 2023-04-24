@@ -1,0 +1,100 @@
+package group.gan.mvc.controller.player.impl;
+
+import group.gan.mvc.controller.command.Command;
+import group.gan.mvc.controller.command.CommandType;
+import group.gan.mvc.controller.command.impl.MoveCommand;
+import group.gan.mvc.controller.player.Player;
+import group.gan.mvc.controller.turn.Pollable;
+import group.gan.mvc.model.player.PlayerModel;
+import group.gan.mvc.model.token.Token;
+import group.gan.mvc.view.View;
+import group.gan.utils.Display;
+
+import java.util.Scanner;
+
+public class PlayerImpl implements Player, Pollable {
+
+    private PlayerModel playerModel;
+
+    public PlayerImpl(PlayerModel playerModel) {
+        this.playerModel = playerModel;
+    }
+
+    @Override
+    public Command play() {
+        // Implement your game logic here and return a Command object.
+        // You might need to interact with playerModel or other components.
+        return null;
+    }
+
+    @Override
+    public void setStateManager(PlayerModel playerModel) {
+        // Implement the logic to set the state manager for this player.
+    }
+
+    @Override
+    public Integer getUid() {
+        return playerModel.getUid();
+    }
+
+    @Override
+    public Token getOneToken() {
+        return playerModel.getOneToken();
+    }
+
+    @Override
+    public String getPlayerName() {
+        return playerModel.getPlayerName();
+    }
+
+    @Override
+    public Integer requestOneIntegerInput() {
+        // Implement the logic to request one integer input from the player
+        // You might need to interact with a View component or other components.
+        Scanner singleInput = new Scanner(System.in);
+        int input = singleInput.nextInt();
+        return input;
+    }
+
+    @Override
+    public Integer[] requestIntegersInput() {
+        // Implement the logic to request a list of integer inputs from the player
+        // You might need to interact with a View component or other components.
+        Scanner multipleInput = new Scanner(System.in);
+        String input = multipleInput.nextLine();
+
+        String[] inputArray = input.split(",");
+
+        Integer[] intArray = new Integer[inputArray.length];
+
+        try {
+            intArray[0] = Integer.parseInt(inputArray[0]);
+            intArray[1] = Integer.parseInt(inputArray[1]);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a string with two integers separated by a comma.");
+        }
+
+        return intArray;
+
+    }
+
+    @Override
+    public CommandType poll(View view) {
+        Display display = new Display();
+        view.draw(display);
+        int input = requestOneIntegerInput();
+        return CommandType.values()[input];
+
+    }
+
+    @Override
+    public Command fillCommand(Command command) {
+        if (command.getCommandType() == CommandType.MOVE) {
+            MoveCommand moveCommand = (MoveCommand) command;
+            moveCommand.init(this);
+            return moveCommand;
+        }  else {
+            return null;
+        }
+    }
+}

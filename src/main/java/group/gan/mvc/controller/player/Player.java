@@ -1,6 +1,7 @@
 package group.gan.mvc.controller.player;
 
 import group.gan.mvc.controller.command.Command;
+import group.gan.mvc.model.player.PlayerModel;
 import group.gan.mvc.model.player.PlayerStateEnum;
 import group.gan.mvc.model.token.Token;
 
@@ -21,7 +22,7 @@ public interface Player {
     /**
      * set the state manager
      */
-    void setStateManager();
+    void setStateManager(PlayerModel playerModel);
 
     /**
      * get the uid of the player

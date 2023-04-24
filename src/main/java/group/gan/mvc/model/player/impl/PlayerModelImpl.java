@@ -80,11 +80,13 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
 
     @Override
     public Token getOneToken() {
-
-        if (tokens.length > 0) {
-            Token token = tokens[0];
+        Token[] unmodifiedTokens = new Token[tokens.length];
+        if (unmodifiedTokens.length > 0) {
+            Token token = unmodifiedTokens[0];
             removeOneToken();
-            return token;
+            for (int i = 0; i < unmodifiedTokens.length; i++) {
+                return unmodifiedTokens[i];
+            }
         }
         return null;
     }
