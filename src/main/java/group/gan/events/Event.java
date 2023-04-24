@@ -14,13 +14,13 @@ public interface Event<T> {
      * The event source usually refers to the initiator of the event
      * @return A generic T that may come from different event sources for events with the same content
      */
-    T getEventSource();
+    T getEventSource(); //Board
 
     /**
      * Get the specific content of the event (Optional)
      * @return Object
      */
-    Object geEventContext();
+    Object geEventContext(); // Token
 
     /**
      * Set the specific content of the event (Optional)

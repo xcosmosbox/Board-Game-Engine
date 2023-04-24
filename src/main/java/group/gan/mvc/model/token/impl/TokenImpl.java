@@ -3,6 +3,8 @@ package group.gan.mvc.model.token.impl;
 import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.token.Token;
 
+import java.util.Objects;
+
 /**
  * @author: fengyuxiang
  * @ClassName: TokenImpl
@@ -78,6 +80,18 @@ public class TokenImpl implements Token {
         this.symbol = character;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TokenImpl token)) return false;
+        return Objects.equals(owner, token.owner) && Objects.equals(symbol, token.symbol);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(owner, symbol);
+    }
+
     /**
      * remove the owner of token
      */
@@ -85,4 +99,8 @@ public class TokenImpl implements Token {
     public void goDie() {
         this.owner = null;
     }
-}
+
+
+
+    }
+
