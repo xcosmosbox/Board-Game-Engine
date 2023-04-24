@@ -32,6 +32,18 @@ public interface Token {
     void setSymbol(Character character);
 
     /**
+     * getter for token ID
+     * @return Integer token id
+     */
+    Integer getTokenID();
+
+    /**
+     * setter for token id
+     * @param tokenID token id
+     */
+    void setTokenID(Integer tokenID);
+
+    /**
      * Let token to die
      */
     void goDie();

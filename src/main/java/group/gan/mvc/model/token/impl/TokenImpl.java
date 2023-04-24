@@ -15,6 +15,16 @@ import java.util.Objects;
 public class TokenImpl implements Token {
 
     /**
+     * a static global class variable for TokenImpl
+     */
+    public static int uid = 0;
+
+    /**
+     * store token id for each token
+     */
+    private int tokenID;
+
+    /**
      * store player reference
      */
     private Player owner;
@@ -31,6 +41,8 @@ public class TokenImpl implements Token {
     public TokenImpl(Player owner, Character symbol) {
         this.owner = owner;
         this.symbol = symbol;
+        this.tokenID = TokenImpl.uid;
+        TokenImpl.uid += 1;
     }
 
     /**
@@ -80,16 +92,24 @@ public class TokenImpl implements Token {
         this.symbol = character;
     }
 
+    /**
+     * getter for token ID
+     *
+     * @return Integer token id
+     */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TokenImpl token)) return false;
-        return Objects.equals(owner, token.owner) && Objects.equals(symbol, token.symbol);
+    public Integer getTokenID() {
+        return tokenID;
     }
 
+    /**
+     * setter for token id
+     *
+     * @param tokenID token id
+     */
     @Override
-    public int hashCode() {
-        return Objects.hash(owner, symbol);
+    public void setTokenID(Integer tokenID) {
+        this.tokenID = tokenID;
     }
 
     /**
@@ -101,6 +121,17 @@ public class TokenImpl implements Token {
     }
 
 
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TokenImpl token = (TokenImpl) o;
+        return tokenID == token.tokenID && Objects.equals(owner, token.owner) && Objects.equals(symbol, token.symbol);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tokenID, owner, symbol);
+    }
+}
 

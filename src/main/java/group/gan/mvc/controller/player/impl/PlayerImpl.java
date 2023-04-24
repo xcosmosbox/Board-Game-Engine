@@ -3,11 +3,16 @@ package group.gan.mvc.controller.player.impl;
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.controller.command.CommandType;
 import group.gan.mvc.controller.command.impl.MoveCommand;
+import group.gan.mvc.controller.move.factory.MoveStrategyFactory;
+import group.gan.mvc.controller.move.factory.impl.MovingStrategyFactory;
+import group.gan.mvc.controller.move.factory.impl.PlacingStrategyFactory;
 import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.controller.turn.Pollable;
 import group.gan.mvc.model.player.PlayerModel;
+import group.gan.mvc.model.player.PlayerStateEnum;
 import group.gan.mvc.model.token.Token;
 import group.gan.mvc.view.View;
+import group.gan.utils.CommandTypeConverter;
 import group.gan.utils.Display;
 
 import java.util.Scanner;
@@ -49,8 +54,6 @@ public class PlayerImpl implements Player, Pollable {
 
     @Override
     public Integer requestOneIntegerInput() {
-        // Implement the logic to request one integer input from the player
-        // You might need to interact with a View component or other components.
         Scanner singleInput = new Scanner(System.in);
         int input = singleInput.nextInt();
         return input;
@@ -58,8 +61,6 @@ public class PlayerImpl implements Player, Pollable {
 
     @Override
     public Integer[] requestIntegersInput() {
-        // Implement the logic to request a list of integer inputs from the player
-        // You might need to interact with a View component or other components.
         Scanner multipleInput = new Scanner(System.in);
         String input = multipleInput.nextLine();
 
@@ -83,7 +84,7 @@ public class PlayerImpl implements Player, Pollable {
         Display display = new Display();
         view.draw(display);
         int input = requestOneIntegerInput();
-        return CommandType.values()[input];
+        return CommandTypeConverter.IntegerToCommandType(input, view);
 
     }
 
@@ -92,9 +93,20 @@ public class PlayerImpl implements Player, Pollable {
         if (command.getCommandType() == CommandType.MOVE) {
             MoveCommand moveCommand = (MoveCommand) command;
             moveCommand.init(this);
-            return moveCommand;
-        }  else {
-            return null;
+            MoveStrategyFactory moveStrategyFactory;
+
+            if (this.playerModel.getState() == PlayerStateEnum.PLACING){
+                moveStrategyFactory = new PlacingStrategyFactory();
+                moveCommand.initMoveStrategy(moveStrategyFactory.createStrategy());
+
+            } else if (this.playerModel.getState() == PlayerStateEnum.MOVING) {
+                moveStrategyFactory = new MovingStrategyFactory();
+                moveCommand.initMoveStrategy(moveStrategyFactory.createStrategy());
+            } // ...Subsequent needs to implement flying
+
+
         }
+
+        return command;
     }
 }

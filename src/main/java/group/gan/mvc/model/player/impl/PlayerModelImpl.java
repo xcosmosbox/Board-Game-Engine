@@ -8,6 +8,7 @@ import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.model.player.PlayerModel;
 import group.gan.mvc.model.player.PlayerStateEnum;
 import group.gan.mvc.model.token.Token;
+import group.gan.mvc.model.token.impl.TokenImpl;
 
 public class PlayerModelImpl implements PlayerModel, EventListener {
 
@@ -16,7 +17,7 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
     public static Integer uid = 0;
     private Integer playerUid;
     private Token[] tokens;
-    private Command commandBuilder;
+//    private Command commandBuilder;
     private int placeTokenCounter = 0;
     private int millTokenCounter = 0;
     private int flyCondition = 6;
@@ -26,10 +27,9 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
 
     public PlayerModelImpl(String playerName) {
         this.playerName = playerName;
-        this.playerUid = uid;
+        this.playerUid = PlayerModelImpl.uid;
         this.state = PlayerStateEnum.PLACING;
-        this.tokens = new Token[0];
-        uid++;
+        PlayerModelImpl.uid++;
     }
 
     @Override
@@ -66,11 +66,11 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
 
     @Override
     public Command getCommandBuilder() {
-        return commandBuilder;
+        return null;
     }
 
     public void setCommandBuilder(Command commandBuilder) {
-        this.commandBuilder = commandBuilder;
+        // nothing to do
     }
 
     @Override
@@ -80,15 +80,13 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
 
     @Override
     public Token getOneToken() {
-        Token[] unmodifiedTokens = new Token[tokens.length];
-        if (unmodifiedTokens.length > 0) {
-            Token token = unmodifiedTokens[0];
-            removeOneToken();
-            for (int i = 0; i < unmodifiedTokens.length; i++) {
-                return unmodifiedTokens[i];
-            }
-        }
-        return null;
+
+        Token unmodifiedToken = new TokenImpl();
+        unmodifiedToken.setOwner(tokens[placeTokenCounter].getOwner());
+        unmodifiedToken.setSymbol(tokens[placeTokenCounter].getSymbol());
+        unmodifiedToken.setTokenID(tokens[placeTokenCounter].getTokenID());
+
+        return unmodifiedToken;
     }
 
     @Override
@@ -98,8 +96,16 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
 
     @Override
     public Token[] getTokens() {
-        Token[] unmodifiedToken = new Token[tokens.length];
-        return unmodifiedToken;
+        Token[] unmodifiedTokens = new TokenImpl[tokens.length];
+
+        for (int i = 0; i < tokens.length; i++) {
+            unmodifiedTokens[i] = new TokenImpl();
+            unmodifiedTokens[i].setOwner(tokens[i].getOwner());
+            unmodifiedTokens[i].setSymbol(tokens[i].getSymbol());
+            unmodifiedTokens[i].setTokenID(tokens[i].getTokenID());
+        }
+
+        return unmodifiedTokens;
     }
 
     @Override
@@ -109,16 +115,13 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
 
     @Override
     public Token removeOneToken() {
-        Token[] unmodifiedTokens = new Token[tokens.length];
 
-        if (unmodifiedTokens.length > 0) {
-            Token removedToken = unmodifiedTokens[0];
-            Token[] newTokens = new Token[unmodifiedTokens.length - 1];
-            System.arraycopy(unmodifiedTokens, 1, newTokens, 0, unmodifiedTokens.length - 1);
-            unmodifiedTokens = newTokens;
-            return removedToken;
-        }
-        return null;
+        Token unmodifiedToken = new TokenImpl();
+        unmodifiedToken.setOwner(tokens[placeTokenCounter].getOwner());
+        unmodifiedToken.setSymbol(tokens[placeTokenCounter].getSymbol());
+        unmodifiedToken.setTokenID(tokens[placeTokenCounter].getTokenID());
+
+        return unmodifiedToken;
     }
 
     @Override
@@ -145,7 +148,6 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
                 for (int i = 0; i < tokens.length; i++) {
                     if (tokens[i].equals(t)){
                         tokens[i].goDie();
-                        tokens[i] = null;
                         millTokenCounter++;
                         if (millTokenCounter == flyCondition) {
                             setState(PlayerStateEnum.FLYING);
