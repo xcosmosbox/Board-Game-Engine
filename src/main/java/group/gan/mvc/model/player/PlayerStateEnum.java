@@ -5,5 +5,5 @@ public enum PlayerStateEnum {
     MOVING,
     FLYING,
     FAILED,
-    QUIT
+
 }
