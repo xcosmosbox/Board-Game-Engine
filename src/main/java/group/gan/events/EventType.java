@@ -4,4 +4,5 @@ public enum EventType {
     PLACE,
     MOVE,
     MILL
+
 }
