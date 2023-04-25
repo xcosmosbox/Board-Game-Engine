@@ -181,8 +181,6 @@ public class InvalidPosition extends Exception {
 
     @Override
     public String toString() {
-        return "InvalidPosition{" +
-                "msg='" + msg + '\'' +
-                '}';
+        return ""+msg+"";
     }
 }

@@ -1,5 +1,9 @@
 package group.gan.mvc.controller.board.impl;
 
+import group.gan.events.Event;
+import group.gan.events.EventListener;
+import group.gan.events.EventSource;
+import group.gan.events.impl.PlacingEvent;
 import group.gan.exception.InvalidCoordinate;
 import group.gan.exception.InvalidPosition;
 import group.gan.mvc.controller.board.Board;
@@ -19,7 +23,7 @@ import java.util.*;
  * @description:
  * @create: 22/4/2023
  */
-public class BoardImpl implements Board {
+public class BoardImpl implements Board, EventSource {
 
     /**
      * Board controller through the board model to access and operate position and token data
@@ -42,6 +46,11 @@ public class BoardImpl implements Board {
      * Map< 0, set<1,9> >
      */
     private Map<Integer, Set<Integer>> validMovesMap;
+
+    /**
+     * A list of all listeners
+     */
+    private List<EventListener> listeners = new ArrayList<>();
 
     /**
      * constructor
@@ -140,7 +149,15 @@ public class BoardImpl implements Board {
     @Override
     public void placeToken(Token token, Coordinate coordinate) throws InvalidCoordinate {
         if (checkPositionValid(coordinate) && checkPositionIsEmpty(coordinate)){
+            // place token
             boardModel.addOneTokenIntoPosition(token, parsePosition(coordinate));
+
+            // notify listeners through place event
+            Event<Board> placeEvent = new PlacingEvent<>();
+            placeEvent.setEventSource(this);
+            placeEvent.setEventContext(token);
+            notifyListeners(placeEvent);
+
         } else {
             throw new InvalidCoordinate("Invalid Coordinate: "+coordinate.toString()+ " !");
         }
@@ -192,7 +209,6 @@ public class BoardImpl implements Board {
      */
     @Override
     public Boolean checkPositionValid(Coordinate coordinate) {
-        System.out.println(coordinatePositionMapping.containsKey(coordinate));
         return coordinatePositionMapping.containsKey(coordinate);
     }
 
@@ -271,5 +287,54 @@ public class BoardImpl implements Board {
     @Override
     public Position[] getAllPositionsFromBoard() {
         return boardModel.selectAllPositions();
+    }
+
+    /**
+     * Add one listener
+     *
+     * @param listener
+     */
+    @Override
+    public void addListener(EventListener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * remove one listener
+     *
+     * @param listener
+     */
+    @Override
+    public void removeListener(EventListener listener) {
+        listeners.remove(listener);
+    }
+
+    /**
+     * Notify all listeners
+     */
+    @Override
+    public void notifyListeners() {
+        // noting to do for now
+    }
+
+    /**
+     * Notify all listener and pass one Event
+     *
+     * @param event
+     */
+    @Override
+    public void notifyListeners(Event event) {
+        // notify
+        for (EventListener listener : listeners) {
+            listener.onEvent(event);
+        }
+    }
+
+    /**
+     * Remove all listeners
+     */
+    @Override
+    public void clearListeners() {
+        listeners = new ArrayList<>();
     }
 }

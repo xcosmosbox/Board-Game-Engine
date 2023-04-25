@@ -17,6 +17,12 @@ public interface Event<T> {
     T getEventSource();
 
     /**
+     * Set the specific event source
+     * @param t
+     */
+    void setEventSource(T t);
+
+    /**
      * Get the specific content of the event (Optional)
      * @return Object
      */
@@ -25,7 +31,7 @@ public interface Event<T> {
     /**
      * Set the specific content of the event (Optional)
      */
-    void setEventContext();
+    void setEventContext(Object context);
 
 
 }

@@ -4,6 +4,7 @@ import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.controller.command.CommandType;
 import group.gan.mvc.controller.command.factory.CommandFactory;
 import group.gan.mvc.controller.command.impl.MoveCommand;
+import group.gan.mvc.controller.command.impl.QuitCommand;
 
 /**
  * @author: fengyuxiang
@@ -23,6 +24,9 @@ public class MoveCommandFactory implements CommandFactory {
     public Command createCommand(CommandType commandType) {
         if (commandType == CommandType.MOVE){
             return new MoveCommand();
+        }
+        if (commandType == CommandType.QUIT){
+            return new QuitCommand();
         }
         return null;
     }

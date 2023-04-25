@@ -67,7 +67,7 @@ public class TurnImpl implements Turn {
 
     @Override
     public Pollable getPollableInstance() {
-        return currentPollable;
+        return getCurrentPollableObject();
 
     }
 

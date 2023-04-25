@@ -7,6 +7,7 @@ import group.gan.mvc.controller.game.Game;
 import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.view.View;
 import group.gan.mvc.view.impl.BoardView;
+import group.gan.mvc.view.impl.PlayerInfoView;
 import group.gan.utils.Display;
 
 
@@ -33,10 +34,12 @@ public class GameFacade implements Game {
     @Override
     public void run() {
         Display display = new Display();
-        while (!gameModel.isGameOver()) {
+        while (!gameModel.isGameOver() && !quit) {
             // Render game board
             View boardView = new BoardView(gameModel.getBoard().getAllPositionsFromBoard());
             boardView.draw(display);
+            View userInfoView = new PlayerInfoView(gameModel.getTurn().getPollableInstance());
+            userInfoView.draw(display);
 
             // Request a command from the player
             Command command = gameModel.getTurn().runTurn();
@@ -85,7 +88,7 @@ public class GameFacade implements Game {
     public void quit() {
         this.quit = true;
         Display display = new Display();
-        display.displayMessage("Game Quit!");
+        display.displayMessage("  Game Quit!");
     }
 
     /**
@@ -95,7 +98,7 @@ public class GameFacade implements Game {
     public void quitForWin() {
         this.quit = true;
         Display display = new Display();
-        display.displayMessage("You Won!");
+        display.displayMessage("  You Won!");
     }
 
     /**

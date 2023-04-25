@@ -1,6 +1,7 @@
 package group.gan.mvc.controller.move.impl;
 
 import group.gan.exception.InvalidCoordinate;
+import group.gan.exception.InvalidTokenChoose;
 import group.gan.mvc.controller.board.Board;
 import group.gan.mvc.controller.move.MoveStrategy;
 import group.gan.mvc.controller.player.Player;
@@ -30,8 +31,16 @@ public class MovingStrategy implements MoveStrategy {
     @Override
     public Boolean executeStrategy(Player player, Board board) {
         try {
+            if (!board.getOnePositionFromBoard(from).isEmpty()){
+                if(board.getOnePositionFromBoard(from).peekToken().getOwner() != player){
+                    throw new InvalidTokenChoose("This is not your token!");
+                }
+            }
             board.moveToken(from,to);
         } catch (InvalidCoordinate e) {
+            System.out.println(e);
+            return false;
+        } catch (InvalidTokenChoose e) {
             System.out.println(e);
             return false;
         }

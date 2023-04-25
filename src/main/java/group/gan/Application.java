@@ -1,5 +1,7 @@
 package group.gan;
 
+import group.gan.events.EventListener;
+import group.gan.events.EventSource;
 import group.gan.mvc.controller.board.Board;
 import group.gan.mvc.controller.board.impl.BoardImpl;
 import group.gan.mvc.controller.game.Game;
@@ -34,17 +36,23 @@ public class Application {
         Player player1 = new PlayerImpl(playerModel1);
         Token[] tokens1 = new Token[9];
         for (int i = 0; i < tokens1.length; i++) {
-            tokens1[i] = new TokenImpl(player1,'○');
+//            tokens1[i] = new TokenImpl(player1,'○');
+            tokens1[i] = new TokenImpl(player1,'\u2B24');
+
         }
         playerModel1.setTokens(tokens1);
+        ((EventSource) board).addListener((EventListener) playerModel1);
 
         PlayerModel playerModel2 = new PlayerModelImpl("Player-2");
         Player player2 = new PlayerImpl(playerModel2);
         Token[] tokens2 = new Token[9];
         for (int i = 0; i < tokens2.length; i++) {
-            tokens2[i] = new TokenImpl(player2,'●');
+//            tokens2[i] = new TokenImpl(player2,'●');
+            tokens2[i] = new TokenImpl(player2,'\u2B1C');
+
         }
         playerModel2.setTokens(tokens2);
+        ((EventSource) board).addListener((EventListener) playerModel2);
 
 
         Turn turn = new TurnImpl();

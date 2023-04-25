@@ -138,4 +138,11 @@ public class PlayerImpl implements Player, Pollable {
     public int hashCode() {
         return Objects.hash(playerModel);
     }
+
+    @Override
+    public String toString() {
+        Token[] allTokens = playerModel.getTokens();
+        String symbol = String.valueOf(allTokens[0].getSymbol());
+        return getPlayerName() + " / Token Color: " + symbol;
+    }
 }
