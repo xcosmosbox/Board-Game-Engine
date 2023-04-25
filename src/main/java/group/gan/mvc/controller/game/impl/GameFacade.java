@@ -47,7 +47,20 @@ public class GameFacade implements Game {
             } else if (command.getCommandType() == CommandType.QUIT) {
                 command.init(this);
             }
-            command.execute();
+            Boolean result = command.execute();
+
+            // check execution result, if result == false, retrieve coordinates
+            while (!result){
+                Command refillCommand = gameModel.getTurn().refillCommand(command);
+                // Issue & execute the command
+                if (refillCommand.getCommandType() == CommandType.MOVE) {
+                    refillCommand.init(this, gameModel.getBoard());
+                } else if (refillCommand.getCommandType() == CommandType.QUIT) {
+                    refillCommand.init(this);
+                }
+                result = refillCommand.execute();
+            }
+
 
             // =========  FUTURE  =========
             // In the following iteration, we will implement the operation of checking whether a mill has been formed

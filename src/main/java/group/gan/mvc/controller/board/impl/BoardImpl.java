@@ -141,6 +141,8 @@ public class BoardImpl implements Board {
     public void placeToken(Token token, Coordinate coordinate) throws InvalidCoordinate {
         if (checkPositionValid(coordinate) && checkPositionIsEmpty(coordinate)){
             boardModel.addOneTokenIntoPosition(token, parsePosition(coordinate));
+        } else {
+            throw new InvalidCoordinate("Invalid Coordinate: "+coordinate.toString()+ " !");
         }
     }
 
@@ -190,6 +192,7 @@ public class BoardImpl implements Board {
      */
     @Override
     public Boolean checkPositionValid(Coordinate coordinate) {
+        System.out.println(coordinatePositionMapping.containsKey(coordinate));
         return coordinatePositionMapping.containsKey(coordinate);
     }
 
