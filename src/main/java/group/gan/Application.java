@@ -36,8 +36,7 @@ public class Application {
         Player player1 = new PlayerImpl(playerModel1);
         Token[] tokens1 = new Token[9];
         for (int i = 0; i < tokens1.length; i++) {
-//            tokens1[i] = new TokenImpl(player1,'○');
-            tokens1[i] = new TokenImpl(player1,'\u2B24');
+            tokens1[i] = new TokenImpl(player1,'○');
 
         }
         playerModel1.setTokens(tokens1);
@@ -47,8 +46,7 @@ public class Application {
         Player player2 = new PlayerImpl(playerModel2);
         Token[] tokens2 = new Token[9];
         for (int i = 0; i < tokens2.length; i++) {
-//            tokens2[i] = new TokenImpl(player2,'●');
-            tokens2[i] = new TokenImpl(player2,'\u2B1C');
+            tokens2[i] = new TokenImpl(player2,'●');
 
         }
         playerModel2.setTokens(tokens2);
