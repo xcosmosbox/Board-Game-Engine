@@ -42,11 +42,11 @@ public class MovingStrategy implements MoveStrategy {
     public void initDescription(Player player) {
         Display display = new Display();
 
-        display.displayMessage("Please enter the coordinate of the token you want to move(separate two numbers with a comma): ");
+        display.displayMessage("  Please enter the coordinate of the token you want to move(separate two numbers with a comma): ");
         Integer[] firstInputs = player.requestIntegersInput();
         from = new CoordinateImpl(firstInputs[0],firstInputs[1]);
 
-        display.displayMessage("Please enter the destination coordinate of the token(separate two numbers with a comma): ");
+        display.displayMessage("  Please enter the destination coordinate of the token(separate two numbers with a comma): ");
         Integer[] secondInputs = player.requestIntegersInput();
         to = new CoordinateImpl(secondInputs[0],secondInputs[1]);
     }

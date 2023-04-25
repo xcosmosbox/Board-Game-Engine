@@ -48,18 +48,21 @@ public class GameFacade implements Game {
                 command.init(this);
             }
             command.execute();
+
+            // =========  FUTURE  =========
+            // In the following iteration, we will implement the operation of checking whether a mill has been formed
+            // and the player has taken a token. We will not implement this function in sprint2 for the time being
+            // =========  FUTURE  =========
+
+            // Check if the game exits
+            if (!quit) {
+                //start next turn
+                gameModel.getTurn().switchPollableObject();
+            }
+
         }
 
-        // =========  FUTURE  =========
-        // In the following iteration, we will implement the operation of checking whether a mill has been formed
-        // and the player has taken a token. We will not implement this function in sprint2 for the time being
-        // =========  FUTURE  =========
 
-        // Check if the game exits
-        if (!quit) {
-            //start next turn
-            gameModel.getTurn().switchPollableObject();
-        }
     }
 
     /**

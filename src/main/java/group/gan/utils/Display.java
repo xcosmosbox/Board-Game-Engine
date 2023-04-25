@@ -13,7 +13,7 @@ public class Display {
     }
 
     public void displayView(String str){
-        System.out.println(str);
+        System.out.print(str);
     }
 
     /**
@@ -33,8 +33,8 @@ public class Display {
      * @param str
      */
     public void displayMessage(String str){
-        String msg = String.format("%3s"," ");
-        msg += str;
-        System.out.print(msg);
+//        String msg = String.format("%3s"," ");
+//        msg += str;
+        System.out.print(str);
     }
 }

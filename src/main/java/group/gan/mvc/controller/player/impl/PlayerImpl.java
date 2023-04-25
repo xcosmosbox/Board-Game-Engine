@@ -3,6 +3,7 @@ package group.gan.mvc.controller.player.impl;
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.controller.command.CommandType;
 import group.gan.mvc.controller.command.impl.MoveCommand;
+import group.gan.mvc.controller.move.MoveStrategy;
 import group.gan.mvc.controller.move.factory.MoveStrategyFactory;
 import group.gan.mvc.controller.move.factory.impl.MovingStrategyFactory;
 import group.gan.mvc.controller.move.factory.impl.PlacingStrategyFactory;
@@ -15,6 +16,7 @@ import group.gan.mvc.view.View;
 import group.gan.utils.CommandTypeConverter;
 import group.gan.utils.Display;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 public class PlayerImpl implements Player, Pollable {
@@ -99,22 +101,41 @@ public class PlayerImpl implements Player, Pollable {
     @Override
     public Command fillCommand(Command command) {
         if (command.getCommandType() == CommandType.MOVE) {
-            MoveCommand moveCommand = (MoveCommand) command;
-            moveCommand.init(this);
-            MoveStrategyFactory moveStrategyFactory;
+//            MoveCommand moveCommand = (MoveCommand) command;
+//            moveCommand.init(this);
+            ((MoveCommand) command).init(this);
+            MoveStrategyFactory moveStrategyFactory = null;
 
             if (this.playerModel.getState() == PlayerStateEnum.PLACING){
                 moveStrategyFactory = new PlacingStrategyFactory();
-                moveCommand.initMoveStrategy(moveStrategyFactory.createStrategy());
+//                moveCommand.initMoveStrategy(moveStrategyFactory.createStrategy());
 
             } else if (this.playerModel.getState() == PlayerStateEnum.MOVING) {
                 moveStrategyFactory = new MovingStrategyFactory();
-                moveCommand.initMoveStrategy(moveStrategyFactory.createStrategy());
+//                moveCommand.initMoveStrategy(moveStrategyFactory.createStrategy());
             } // ...Subsequent needs to implement flying
 
+            if (moveStrategyFactory != null){
+                MoveStrategy moveStrategy = moveStrategyFactory.createStrategy();
+                moveStrategy.initDescription(this);
+                ((MoveCommand) command).initMoveStrategy(moveStrategy);
+            }
 
         }
 
         return command;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerImpl player = (PlayerImpl) o;
+        return Objects.equals(playerModel, player.playerModel);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(playerModel);
     }
 }

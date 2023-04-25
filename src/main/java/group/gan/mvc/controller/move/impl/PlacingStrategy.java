@@ -42,7 +42,7 @@ public class PlacingStrategy implements MoveStrategy {
     public void initDescription(Player player) {
         this.player = player;
         Display display = new Display();
-        display.displayMessage("Please enter the Coordinate where you want to place the token (separate two numbers with a comma): ");
+        display.displayMessage("  Please enter the Coordinate where you want to place the token (separate two numbers with a comma): ");
         Integer[] inputs = player.requestIntegersInput();
         coordinate = new CoordinateImpl(inputs[0],inputs[1]);
     }
