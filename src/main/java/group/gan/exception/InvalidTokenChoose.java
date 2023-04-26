@@ -8,7 +8,7 @@ package group.gan.exception;
  * @create: 26/4/2023
  */
 public class InvalidTokenChoose extends Exception {
-    String msg;
+    private String msg;
 
     public InvalidTokenChoose(String message) {
         super(message);

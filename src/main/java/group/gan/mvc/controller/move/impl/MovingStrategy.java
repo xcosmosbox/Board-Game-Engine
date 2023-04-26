@@ -18,8 +18,8 @@ import group.gan.utils.Display;
  */
 public class MovingStrategy implements MoveStrategy {
 
-    Coordinate from;
-    Coordinate to;
+    private Coordinate from;
+    private Coordinate to;
 
     /**
      * Run a specific strategy

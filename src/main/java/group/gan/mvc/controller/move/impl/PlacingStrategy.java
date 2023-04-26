@@ -17,8 +17,8 @@ import group.gan.utils.Display;
  */
 public class PlacingStrategy implements MoveStrategy {
 
-    Coordinate coordinate;
-    Player player;
+    private Coordinate coordinate;
+    private Player player;
 
     /**
      * Run a specific strategy

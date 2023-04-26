@@ -9,7 +9,7 @@ package group.gan.exception;
  */
 public class InvalidPosition extends Exception {
 
-    String msg;
+    private String msg;
 
     /**
      * Constructs a new exception with the specified detail message.  The

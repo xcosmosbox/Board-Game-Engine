@@ -15,8 +15,8 @@ public class TurnImpl implements Turn {
 
     private Queue<Pollable> pollableQueue;
     private Pollable currentPollable;
-    MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
-    QuitCommandFactory quitCommandFactory = new QuitCommandFactory();
+    private MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
+    private QuitCommandFactory quitCommandFactory = new QuitCommandFactory();
 
 
     public TurnImpl() {

@@ -14,7 +14,7 @@ import group.gan.mvc.view.View;
  */
 public class BoardViewFactory implements ViewFactory {
 
-    BoardView boardView;
+    private BoardView boardView;
 
     public BoardViewFactory(Position[] positions){
         boardView = new BoardView(positions);

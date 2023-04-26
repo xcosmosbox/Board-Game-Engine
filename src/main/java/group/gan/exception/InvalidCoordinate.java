@@ -8,7 +8,7 @@ package group.gan.exception;
  * @create: 18/4/2023
  */
 public class InvalidCoordinate extends Exception{
-    String msg;
+    private String msg;
 
     public InvalidCoordinate(String message) {
         super(message);
