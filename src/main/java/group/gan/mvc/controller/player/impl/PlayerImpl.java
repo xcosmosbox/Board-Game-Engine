@@ -19,43 +19,64 @@ import group.gan.utils.Display;
 import java.util.Objects;
 import java.util.Scanner;
 
+/**
+ * PlayerImpl class implements the Player interface and Pollable interface.
+ */
 public class PlayerImpl implements Player, Pollable {
 
     // Declare a PlayerModel instance
     private PlayerModel playerModel;
 
-    // Constructor for the PlayerImpl class, taking a PlayerModel as an argument
+    /** Constructor for the PlayerImpl class, taking a PlayerModel as an argument
+     *
+     * @param playerModel
+     */
     public PlayerImpl(PlayerModel playerModel) {
         // Assign the provided playerModel to the class variable
         this.playerModel = playerModel;
     }
 
-    // just add this for the further use
+    /** just add this for the further use
+     *
+     * @return
+     */
     @Override
     public Command play() {
         return null;
     }
 
-    // Injection interface for setting PlayerModel
+    /** Injection interface for setting PlayerModel
+     *
+     * @param playerModel
+     */
     @Override
     public void setStateManager(PlayerModel playerModel) {
         // an injection interface for player model
         this.playerModel = playerModel;
     }
 
-    // Getter for the player's unique ID
+    /** Getter for the player's unique ID
+     *
+     * @return the player's unique ID
+     */
     @Override
     public Integer getUid() {
         return playerModel.getUid();
     }
 
-    // Getter for one of the player's tokens
+    /** Getter for one of the player's tokens
+     *
+     * @return a token
+     */
     @Override
     public Token getOneToken() {
         return playerModel.getOneToken();
     }
 
-    // Getter for the player's name
+    /** Getter for the player's name
+     *
+     * @return the player's name
+     */
     @Override
     public String getPlayerName() {
         return playerModel.getPlayerName();
@@ -71,7 +92,9 @@ public class PlayerImpl implements Player, Pollable {
         return playerModel.getState();
     }
 
-    // Request a single integer input from the user
+    /** Request a single integer input from the user
+     * @return the integer input
+     */
     @Override
     public Integer requestOneIntegerInput() {
         Scanner singleInput = new Scanner(System.in);
@@ -79,7 +102,10 @@ public class PlayerImpl implements Player, Pollable {
         return input;
     }
 
-    // Request multiple integer inputs from the user
+    /** Request multiple integer inputs from the user
+     *
+     * @return an array of integers
+     */
     @Override
     public Integer[] requestIntegersInput() {
         Scanner multipleInput = new Scanner(System.in);
@@ -102,7 +128,10 @@ public class PlayerImpl implements Player, Pollable {
 
     }
 
-    // Poll for user input with a provided View
+    /** Poll for user input with a provided View
+     * @param view
+     * @return the command type
+     */
     @Override
     public CommandType poll(View view) {
         // get the text message that will be displayed
@@ -114,7 +143,10 @@ public class PlayerImpl implements Player, Pollable {
 
     }
 
-    // Fill in the necessary information for a command
+    /** Fill in the necessary information for a command
+     * @param command
+     * @return the command with the necessary information filled in
+     */
     @Override
     public Command fillCommand(Command command) {
         // If the command is of type MOVE
@@ -148,7 +180,10 @@ public class PlayerImpl implements Player, Pollable {
         return command;
     }
 
-    // Override the equals method for comparing PlayerImpl objects
+    /** Override the equals method for comparing PlayerImpl objects
+     * @param o
+     * @return true if the two objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -157,13 +192,17 @@ public class PlayerImpl implements Player, Pollable {
         return Objects.equals(playerModel, player.playerModel);
     }
 
-    // Override the hashCode method for PlayerImpl objects
+    /** Override the hashCode method for PlayerImpl objects
+     * @return the hash code of the player
+     */
     @Override
     public int hashCode() {
         return Objects.hash(playerModel);
     }
 
-    // Override the toString method for the PlayerImpl class
+    /** Override the toString method for the PlayerImpl class
+     * @return a string representation of the player
+     */
     @Override
     public String toString() {
         // Get all tokens of the player
