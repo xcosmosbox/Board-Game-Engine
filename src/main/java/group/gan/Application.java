@@ -19,6 +19,12 @@ import group.gan.mvc.model.player.PlayerModel;
 import group.gan.mvc.model.player.impl.PlayerModelImpl;
 import group.gan.mvc.model.token.Token;
 import group.gan.mvc.model.token.impl.TokenImpl;
+import group.gan.mvc.view.View;
+import group.gan.mvc.view.impl.IntroduceView;
+import group.gan.mvc.view.impl.ShowRuleWordOnly;
+import group.gan.utils.Display;
+
+import java.util.Scanner;
 
 /**
  * @author: fengyuxiang
@@ -65,6 +71,37 @@ public class Application {
         Game game = new GameFacade();
         game.build(gameModel);
 
-        game.run();
+        Display display = new Display();
+        View introView = new IntroduceView();
+
+
+        Scanner scanner = new Scanner(System.in);
+        int selection;
+        do {
+            introView.draw(display);
+            display.displayMessage("  Your selection: ");
+            selection = scanner.nextInt();
+            switch (selection){
+                case 1:
+                    game.run();
+                    break;
+                case 2:
+                    showRule();
+                    break;
+                case 3:
+                    display.displayMessage("  See you next time!");
+                    break;
+            }
+        } while (selection != 3);
+//        game.run();
+    }
+
+    public static void showRule(){
+        Display display = new Display();
+        ShowRuleWordOnly showRuleWordOnly = new ShowRuleWordOnly();
+        showRuleWordOnly.draw(display);
+        display.displayMessage(display.getNewLine() + "  Press enter key to continue..." + display.getNewLine());
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
     }
 }

@@ -7,12 +7,12 @@ import java.util.ResourceBundle;
 
 /**
  * @author: fengyuxiang
- * @ClassName: IntroduceView
+ * @ClassName: ShowRuleWordOnly
  * @version: 1.0
  * @description:
- * @create: 21/4/2023
+ * @create: 26/4/2023
  */
-public class IntroduceView implements View {
+public class ShowRuleWordOnly implements View {
     /**
      * Drawing methods implemented by subclasses
      *
@@ -24,22 +24,22 @@ public class IntroduceView implements View {
         StringBuilder stringBuilder = new StringBuilder();
 
         // load resource file
-        ResourceBundle introduceViewBundle = ResourceBundle.getBundle("IntroduceView");
+        ResourceBundle wordOnlyGameRuleViewBundle = ResourceBundle.getBundle("WordOnlyGameRule");
 
         // read the number of lines
-        int lines = Integer.parseInt(introduceViewBundle.getString("lines"));
+        int lines = Integer.parseInt(wordOnlyGameRuleViewBundle.getString("lines"));
 
         // read each lines
         for (int i = 0; i < lines; i++) {
             String key = String.valueOf(i);
-            if (introduceViewBundle.containsKey(key)){
-                String line = introduceViewBundle.getString(key);
+            if (wordOnlyGameRuleViewBundle.containsKey(key)){
+                String line = wordOnlyGameRuleViewBundle.getString(key);
                 stringBuilder.append(line + display.getNewLine());
             }
         }
 
-        String introduceViewString = stringBuilder.toString().replace("\"","");
+        String ruleViewString = stringBuilder.toString().replace("\"","");
 
-        display.displayView(introduceViewString);
+        display.displayView(ruleViewString);
     }
 }
