@@ -8,7 +8,7 @@ Team members: Yuxiang Feng, Yifan Wang, Tianyi Liu
 
 ## Sprint2 Special Note
 
-The running entry of the whole project is in the **Application.java** file.
+The running entry of the whole project is in the **Application.java** file.( src/main/java/group/gan/Application.java )
 
 **./docs/Sprint2_Submission/JavaDoc** folder can view JavaDoc
 
