@@ -24,11 +24,6 @@ public class TurnImpl implements Turn {
     //modified
     private CommandFactory moveCommandFactory = new MoveCommandFactory();
     private CommandFactory quitCommandFactory = new QuitCommandFactory();
-    //original code
-    //private MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
-    // Factory for creating quit commands
-    //private QuitCommandFactory quitCommandFactory = new QuitCommandFactory();
-
 
     /**
      * Constructor for TurnImpl class
