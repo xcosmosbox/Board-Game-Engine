@@ -185,6 +185,8 @@ public class BoardImpl implements Board, EventSource {
                 && !checkPositionIsEmpty(from) && checkPositionIsEmpty(to)){
             Token token = boardModel.removeOneTokenByPosition(parsePosition(from));
             boardModel.addOneTokenIntoPosition(token, parsePosition(to));
+        } else {
+            throw new InvalidCoordinate("Invalid Coordinate: " + to.toString()+ " !");
         }
     }
 

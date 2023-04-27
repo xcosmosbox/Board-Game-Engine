@@ -88,7 +88,7 @@ public class GameFacade implements Game {
     public void quit() {
         this.quit = true;
         Display display = new Display();
-        display.displayMessage("  Game Quit!");
+        display.displayMessage("  Game Quit!" + display.getNewLine());
     }
 
     /**
@@ -98,7 +98,7 @@ public class GameFacade implements Game {
     public void quitForWin() {
         this.quit = true;
         Display display = new Display();
-        display.displayMessage("  You Won!");
+        display.displayMessage("  You Won!" + display.getNewLine());
     }
 
     /**
