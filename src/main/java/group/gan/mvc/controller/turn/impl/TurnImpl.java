@@ -2,6 +2,7 @@ package group.gan.mvc.controller.turn.impl;
 
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.controller.command.CommandType;
+import group.gan.mvc.controller.command.factory.CommandFactory;
 import group.gan.mvc.controller.command.factory.impl.MoveCommandFactory;
 import group.gan.mvc.controller.command.factory.impl.QuitCommandFactory;
 import group.gan.mvc.controller.turn.Pollable;
@@ -17,10 +18,16 @@ public class TurnImpl implements Turn {
     private Queue<Pollable> pollableQueue;
     // The current Pollable object in the turn
     private Pollable currentPollable;
+
+
     // Factory for creating move commands
-    private MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
+    //modified
+    private CommandFactory moveCommandFactory = new MoveCommandFactory();
+    private CommandFactory quitCommandFactory = new QuitCommandFactory();
+    //original code
+    //private MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
     // Factory for creating quit commands
-    private QuitCommandFactory quitCommandFactory = new QuitCommandFactory();
+    //private QuitCommandFactory quitCommandFactory = new QuitCommandFactory();
 
 
     /**
