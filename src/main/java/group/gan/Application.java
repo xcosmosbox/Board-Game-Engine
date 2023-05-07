@@ -13,6 +13,8 @@ import group.gan.mvc.controller.turn.Turn;
 import group.gan.mvc.controller.turn.impl.TurnImpl;
 import group.gan.mvc.model.board.BoardModel;
 import group.gan.mvc.model.board.impl.BoardModelImpl;
+import group.gan.mvc.model.board.trigger.Trigger;
+import group.gan.mvc.model.board.trigger.impl.BoardMillTriggerImpl;
 import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.model.game.impl.GameModelImpl;
 import group.gan.mvc.model.player.PlayerModel;
@@ -73,8 +75,9 @@ public class Application {
     public static void newGame(){
         // init the BoardModel
         BoardModel boardModel = new BoardModelImpl();
+        Trigger trigger = new BoardMillTriggerImpl();
         // init board
-        Board board = new BoardImpl(boardModel);
+        Board board = new BoardImpl(boardModel,trigger);
 
         // init the player-1 Model
         PlayerModel playerModel1 = new PlayerModelImpl("Player-1");

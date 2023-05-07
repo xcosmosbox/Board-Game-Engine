@@ -73,8 +73,9 @@ public class BoardImpl implements Board, EventSource {
      * constructor
      * @param boardModel
      */
-    public BoardImpl(BoardModel boardModel) {
+    public BoardImpl(BoardModel boardModel, Trigger trigger) {
         this.boardModel = boardModel;
+        this.trigger = trigger;
         initCoordinatePositionMapping();
         initValidMovesMap();
         initTriggerNodeMap();
@@ -291,13 +292,12 @@ public class BoardImpl implements Board, EventSource {
     /**
      * Players can fly one token on the board
      *
-     * @param player game player
      * @param from   start coordinate
      * @param to     destination coordinate
      * @throws InvalidCoordinate invalid coordinate exception
      */
     @Override
-    public void flyToken(Player player, Coordinate from, Coordinate to) throws InvalidCoordinate {
+    public void flyToken(Coordinate from, Coordinate to) throws InvalidCoordinate {
         if (checkPositionValid(from) && checkPositionValid(to)
                 && !checkPositionIsEmpty(from) && checkPositionIsEmpty(to)){
             Token token = boardModel.removeOneTokenByPosition(parsePosition(from));

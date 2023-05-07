@@ -17,7 +17,7 @@ import java.util.*;
  * @description:
  * @create: 7/5/2023
  */
-public class BoardMillTrigger implements Trigger {
+public class BoardMillTriggerImpl implements Trigger {
 
     /**
      * private variable to store all event listener
@@ -38,7 +38,7 @@ public class BoardMillTrigger implements Trigger {
     /**
      * Non-parameter constructor
      */
-    public BoardMillTrigger() {
+    public BoardMillTriggerImpl() {
         this.initializeTrigger();
     }
 
@@ -63,7 +63,7 @@ public class BoardMillTrigger implements Trigger {
 
                 // according to the counter to call the listener
                 if (counter != 0){
-                    Event<BoardMillTrigger> millEvent = new MillingEvent();
+                    Event<BoardMillTriggerImpl> millEvent = new MillingEvent();
                     millEvent.setEventSource(this);
                     notifyListeners(millEvent);
                 }
