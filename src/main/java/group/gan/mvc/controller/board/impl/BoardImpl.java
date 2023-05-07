@@ -274,7 +274,10 @@ public class BoardImpl implements Board, EventSource {
      */
     @Override
     public Boolean checkMoveValid(Coordinate from, Coordinate to) throws InvalidCoordinate {
-        return true; // ONLY Sprint2 always true (Sprint2 does not test this)
+        if (!validMovesMap.get(parsePosition(from)).contains(parsePosition(to))){
+            return false;
+        }
+        return true;
     }
 
     /**
