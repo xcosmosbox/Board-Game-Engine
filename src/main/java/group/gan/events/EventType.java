@@ -3,6 +3,7 @@ package group.gan.events;
 public enum EventType {
     PLACE,
     MOVE,
-    MILL
+    MILL,
+    BOARD_CHANGE,
 
 }
