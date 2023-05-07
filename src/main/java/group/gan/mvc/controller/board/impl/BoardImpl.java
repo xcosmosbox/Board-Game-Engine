@@ -229,15 +229,8 @@ public class BoardImpl implements Board, EventSource {
     @Override
     public void moveToken(Coordinate from, Coordinate to) throws InvalidCoordinate {
         // for sprint 3
-//        if (checkPositionValid(from) && checkPositionValid(to)
-//                && checkMoveValid(from, to)
-//                && !checkPositionIsEmpty(from) && checkPositionIsEmpty(to)){
-//            Token token = boardModel.removeOneTokenByPosition(parsePosition(from));
-//            boardModel.addOneTokenIntoPosition(token, parsePosition(to));
-//        }
-
-        // for sprint 2
         if (checkPositionValid(from) && checkPositionValid(to)
+                && checkMoveValid(from, to)
                 && !checkPositionIsEmpty(from) && checkPositionIsEmpty(to)){
             Token token = boardModel.removeOneTokenByPosition(parsePosition(from));
             boardModel.addOneTokenIntoPosition(token, parsePosition(to));
