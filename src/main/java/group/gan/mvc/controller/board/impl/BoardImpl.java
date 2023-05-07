@@ -3,6 +3,7 @@ package group.gan.mvc.controller.board.impl;
 import group.gan.events.Event;
 import group.gan.events.EventListener;
 import group.gan.events.EventSource;
+import group.gan.events.impl.MillingEvent;
 import group.gan.events.impl.PlacingEvent;
 import group.gan.exception.InvalidCoordinate;
 import group.gan.exception.InvalidPosition;
@@ -228,7 +229,6 @@ public class BoardImpl implements Board, EventSource {
      */
     @Override
     public void moveToken(Coordinate from, Coordinate to) throws InvalidCoordinate {
-        // for sprint 3
         if (checkPositionValid(from) && checkPositionValid(to)
                 && checkMoveValid(from, to)
                 && !checkPositionIsEmpty(from) && checkPositionIsEmpty(to)){
@@ -241,7 +241,6 @@ public class BoardImpl implements Board, EventSource {
 
     /**
      * Players can remove one token from the board (mill state)
-     * (Sprint2 does not test this)
      *
      * @param player
      * @param coordinate
@@ -249,7 +248,42 @@ public class BoardImpl implements Board, EventSource {
      */
     @Override
     public void removeToken(Player player, Coordinate coordinate) throws InvalidCoordinate {
-        // (Sprint2 does not test this)
+
+        // check the position is valid
+        if (!checkPositionValid(coordinate)){
+            throw new InvalidCoordinate("Invalid Coordinate: " + coordinate.toString()+ " !");
+        }
+
+        // check player can not remove their own token
+        if (boardModel.selectOnePosition(parsePosition(coordinate)).peekToken().getOwner().equals(player)){
+            throw new InvalidCoordinate("Invalid Coordinate: " + coordinate.toString()+ ". You cannot remove your own token!");
+        }
+
+        // check position is not empty
+        if (checkPositionIsEmpty(coordinate)){
+            throw new InvalidCoordinate("Invalid Coordinate: No token here. Please Choose again!");
+        }
+
+        // remove token
+        try {
+            // check remove is valid
+            // token that have formed a mill cannot be removed from the board
+            if (checkRemoveValid(player,coordinate)){
+                // process the remove token behaviour
+                Token token = boardModel.removeOneTokenByPosition(parsePosition(coordinate));
+
+                // notify listeners through place event
+                Event<Board> millEvent = new MillingEvent<>();
+                millEvent.setEventSource(this);
+                millEvent.setEventContext(token);
+                notifyListeners(millEvent);
+
+            }
+        } catch (InvalidPosition e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     /**
@@ -293,7 +327,7 @@ public class BoardImpl implements Board, EventSource {
     public Boolean checkRemoveValid(Player player, Coordinate coordinate) throws InvalidPosition {
         try {
             if (boardModel.selectOnePosition(parsePosition(coordinate)).peekToken().getOwner().equals(player)){
-                return false;
+                throw new InvalidCoordinate("Invalid Coordinate: " + coordinate.toString()+ ". You cannot remove your own token!");
             }
 
             List<Integer> list = triggerNodeMap.get(parsePosition(coordinate));
