@@ -1,10 +1,16 @@
 package group.gan.mvc.model.board.impl;
 
+import group.gan.events.Event;
+import group.gan.events.EventListener;
+import group.gan.events.EventSource;
+import group.gan.events.impl.BoardModelChangeEvent;
 import group.gan.mvc.model.board.BoardModel;
 import group.gan.mvc.model.position.Position;
 import group.gan.mvc.model.position.impl.PositionImpl;
 import group.gan.mvc.model.token.Token;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -14,13 +20,18 @@ import java.util.ResourceBundle;
  * @description:
  * @create: 22/4/2023
  */
-public class BoardModelImpl implements BoardModel {
+public class BoardModelImpl implements BoardModel, EventSource {
 
     /**
      * private attribute
      * store all position
      */
     private Position[] positions;
+
+    /**
+     * private variable to store all event listener
+     */
+    private List<EventListener> eventListenerList = new ArrayList<>();
 
 
     /**
@@ -110,6 +121,9 @@ public class BoardModelImpl implements BoardModel {
     @Override
     public void addOneTokenIntoPosition(Token token, int index) {
         positions[index].addToken(token);
+
+        // notify all listeners
+        notifyListeners();
     }
 
     /**
@@ -120,6 +134,64 @@ public class BoardModelImpl implements BoardModel {
      */
     @Override
     public Token removeOneTokenByPosition(int index) {
-        return positions[index].removeToken();
+        // get the remove token
+        Token token = positions[index].removeToken();
+
+        // notify all listeners
+        notifyListeners();
+
+        return token;
+    }
+
+    /**
+     * Add one listener
+     *
+     * @param listener
+     */
+    @Override
+    public void addListener(EventListener listener) {
+        eventListenerList.add(listener);
+    }
+
+    /**
+     * remove one listener
+     *
+     * @param listener
+     */
+    @Override
+    public void removeListener(EventListener listener) {
+        eventListenerList.remove(listener);
+    }
+
+    /**
+     * Notify all listeners
+     */
+    @Override
+    public void notifyListeners() {
+        // create and init the event
+        Event event = new BoardModelChangeEvent();
+        event.setEventSource(this);
+        event.setEventContext(this.selectAllPositions());
+        notifyListeners(event);
+    }
+
+    /**
+     * Notify all listener and pass one Event
+     *
+     * @param event
+     */
+    @Override
+    public void notifyListeners(Event event) {
+        for (EventListener listener : eventListenerList) {
+            listener.onEvent(event);
+        }
+    }
+
+    /**
+     * Remove all listeners
+     */
+    @Override
+    public void clearListeners() {
+        eventListenerList = new ArrayList<>();
     }
 }
