@@ -278,6 +278,8 @@ public class BoardImpl implements Board, EventSource {
                 millEvent.setEventContext(token);
                 notifyListeners(millEvent);
 
+            } else {
+                throw new InvalidCoordinate("Invalid Coordinate: You can not remove token that have formed a mill. Please Choose again!");
             }
         } catch (InvalidPosition e) {
             throw new RuntimeException(e);
