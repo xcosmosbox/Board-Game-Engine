@@ -172,4 +172,17 @@ public class BoardMillTrigger implements Trigger {
         }
 
     }
+
+    /**
+     * According to the index to return the trigger node state
+     *
+     * @param index
+     * @return
+     */
+    @Override
+    public Boolean getTriggerNodeState(Integer index) {
+        return millNodes[index].getState();
+    }
+
+
 }

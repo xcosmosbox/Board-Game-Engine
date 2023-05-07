@@ -9,6 +9,8 @@ import group.gan.exception.InvalidPosition;
 import group.gan.mvc.controller.board.Board;
 import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.board.BoardModel;
+import group.gan.mvc.model.board.trigger.Trigger;
+import group.gan.mvc.model.board.trigger.impl.MillNode;
 import group.gan.mvc.model.coordinate.Coordinate;
 import group.gan.mvc.model.coordinate.impl.CoordinateImpl;
 import group.gan.mvc.model.position.Position;
@@ -31,6 +33,13 @@ public class BoardImpl implements Board, EventSource {
     private BoardModel boardModel;
 
     /**
+     * Has a trigger that stores the state of the mill on the board.
+     * Since the data stored in the trigger is different from that of the BoardModel,
+     * different objects are used for encapsulation to separate concerns.
+     */
+    private Trigger trigger;
+
+    /**
      * using a Map to store coordinate position mapping
      * for example:
      * Coordinate(0,6) == 6
@@ -48,6 +57,13 @@ public class BoardImpl implements Board, EventSource {
     private Map<Integer, Set<Integer>> validMovesMap;
 
     /**
+     * using map to store all trigger node dictionary
+     * for example, position 0 will affect trigger 1 & 0
+     * Map<0,List<0,1>>
+     */
+    private Map<Integer, List<Integer>> triggerNodeMap;
+
+    /**
      * A list of all listeners
      */
     private List<EventListener> listeners = new ArrayList<>();
@@ -60,6 +76,7 @@ public class BoardImpl implements Board, EventSource {
         this.boardModel = boardModel;
         initCoordinatePositionMapping();
         initValidMovesMap();
+        initTriggerNodeMap();
     }
 
     /**
@@ -135,6 +152,45 @@ public class BoardImpl implements Board, EventSource {
 
                 // assign value
                 validMovesMap.put(position, moveSet);
+            }
+        }
+    }
+
+    /**
+     * using resource bundle to read MillTriggerConfig.properties file
+     * to initialize the validMovesMap
+     */
+    private void initTriggerNodeMap() {
+        // load resource file
+        ResourceBundle MillTriggerConfigBundle = ResourceBundle.getBundle("MillTriggerConfig");
+
+        // read the number of positions
+        int numberOfPositions = Integer.parseInt(MillTriggerConfigBundle.getString("numberOfPositions"));
+
+        // init the key for triggerNodeMap
+        for (int i = 0; i < numberOfPositions; i++) {
+            triggerNodeMap.put(i,new ArrayList<>());
+        }
+
+        // read the number of lines
+        int lines = Integer.parseInt(MillTriggerConfigBundle.getString("lines"));
+
+        // assign value
+        for (int line = 0; line < lines; line++) {
+            // create search key
+            String key = String.valueOf(line);
+            if (MillTriggerConfigBundle.containsKey(key)){
+                // according to the key to get the mill position
+                String millStr = MillTriggerConfigBundle.getString(key);
+
+                // using split function to get the three position index
+                String[] millArray = millStr.split(",");
+
+                // init the value list for triggerNodeMap
+                for (String millIndex : millArray) {
+                    Integer index = Integer.parseInt(millIndex.trim());
+                    triggerNodeMap.get(index).add(line);
+                }
             }
         }
     }
@@ -239,7 +295,23 @@ public class BoardImpl implements Board, EventSource {
      */
     @Override
     public Boolean checkRemoveValid(Player player, Coordinate coordinate) throws InvalidPosition {
-        return true; // (Sprint2 does not test this)
+        try {
+            if (boardModel.selectOnePosition(parsePosition(coordinate)).peekToken().getOwner().equals(player)){
+                return false;
+            }
+
+            List<Integer> list = triggerNodeMap.get(parsePosition(coordinate));
+            for (Integer integer : list) {
+                if(trigger.getTriggerNodeState(integer)){
+                    return false;
+                }
+            }
+
+        } catch (InvalidCoordinate e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
     }
 
     /**

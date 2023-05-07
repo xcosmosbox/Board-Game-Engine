@@ -15,4 +15,12 @@ public interface Trigger extends EventSource, EventListener {
      */
     void initializeTrigger();
 
+    /**
+     * According to the index to return the trigger node state
+     * @param index
+     * @return
+     */
+    Boolean getTriggerNodeState(Integer index);
+
+
 }

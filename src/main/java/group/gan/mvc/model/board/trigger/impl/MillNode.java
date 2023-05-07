@@ -58,4 +58,12 @@ public class MillNode {
             return false;
         }
     }
+
+    /**
+     * Getter for state
+     * @return
+     */
+    public boolean getState() {
+        return state;
+    }
 }
