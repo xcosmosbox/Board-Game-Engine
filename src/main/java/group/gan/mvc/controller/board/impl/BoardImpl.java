@@ -3,12 +3,15 @@ package group.gan.mvc.controller.board.impl;
 import group.gan.events.Event;
 import group.gan.events.EventListener;
 import group.gan.events.EventSource;
+import group.gan.events.impl.MillingEvent;
 import group.gan.events.impl.PlacingEvent;
 import group.gan.exception.InvalidCoordinate;
 import group.gan.exception.InvalidPosition;
 import group.gan.mvc.controller.board.Board;
 import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.board.BoardModel;
+import group.gan.mvc.model.board.trigger.Trigger;
+import group.gan.mvc.model.board.trigger.impl.MillNode;
 import group.gan.mvc.model.coordinate.Coordinate;
 import group.gan.mvc.model.coordinate.impl.CoordinateImpl;
 import group.gan.mvc.model.position.Position;
@@ -31,6 +34,13 @@ public class BoardImpl implements Board, EventSource {
     private BoardModel boardModel;
 
     /**
+     * Has a trigger that stores the state of the mill on the board.
+     * Since the data stored in the trigger is different from that of the BoardModel,
+     * different objects are used for encapsulation to separate concerns.
+     */
+    private Trigger trigger;
+
+    /**
      * using a Map to store coordinate position mapping
      * for example:
      * Coordinate(0,6) == 6
@@ -48,6 +58,13 @@ public class BoardImpl implements Board, EventSource {
     private Map<Integer, Set<Integer>> validMovesMap;
 
     /**
+     * using map to store all trigger node dictionary
+     * for example, position 0 will affect trigger 1 & 0
+     * Map<0,List<0,1>>
+     */
+    private Map<Integer, List<Integer>> triggerNodeMap;
+
+    /**
      * A list of all listeners
      */
     private List<EventListener> listeners = new ArrayList<>();
@@ -56,10 +73,12 @@ public class BoardImpl implements Board, EventSource {
      * constructor
      * @param boardModel
      */
-    public BoardImpl(BoardModel boardModel) {
+    public BoardImpl(BoardModel boardModel, Trigger trigger) {
         this.boardModel = boardModel;
+        this.trigger = trigger;
         initCoordinatePositionMapping();
         initValidMovesMap();
+        initTriggerNodeMap();
     }
 
     /**
@@ -140,6 +159,45 @@ public class BoardImpl implements Board, EventSource {
     }
 
     /**
+     * using resource bundle to read MillTriggerConfig.properties file
+     * to initialize the validMovesMap
+     */
+    private void initTriggerNodeMap() {
+        // load resource file
+        ResourceBundle MillTriggerConfigBundle = ResourceBundle.getBundle("MillTriggerConfig");
+
+        // read the number of positions
+        int numberOfPositions = Integer.parseInt(MillTriggerConfigBundle.getString("numberOfPositions"));
+
+        // init the key for triggerNodeMap
+        for (int i = 0; i < numberOfPositions; i++) {
+            triggerNodeMap.put(i,new ArrayList<>());
+        }
+
+        // read the number of lines
+        int lines = Integer.parseInt(MillTriggerConfigBundle.getString("lines"));
+
+        // assign value
+        for (int line = 0; line < lines; line++) {
+            // create search key
+            String key = String.valueOf(line);
+            if (MillTriggerConfigBundle.containsKey(key)){
+                // according to the key to get the mill position
+                String millStr = MillTriggerConfigBundle.getString(key);
+
+                // using split function to get the three position index
+                String[] millArray = millStr.split(",");
+
+                // init the value list for triggerNodeMap
+                for (String millIndex : millArray) {
+                    Integer index = Integer.parseInt(millIndex.trim());
+                    triggerNodeMap.get(index).add(line);
+                }
+            }
+        }
+    }
+
+    /**
      * Players can place token on the board
      *
      * @param token
@@ -172,16 +230,8 @@ public class BoardImpl implements Board, EventSource {
      */
     @Override
     public void moveToken(Coordinate from, Coordinate to) throws InvalidCoordinate {
-        // for sprint 3
-//        if (checkPositionValid(from) && checkPositionValid(to)
-//                && checkMoveValid(from, to)
-//                && !checkPositionIsEmpty(from) && checkPositionIsEmpty(to)){
-//            Token token = boardModel.removeOneTokenByPosition(parsePosition(from));
-//            boardModel.addOneTokenIntoPosition(token, parsePosition(to));
-//        }
-
-        // for sprint 2
         if (checkPositionValid(from) && checkPositionValid(to)
+                && checkMoveValid(from, to)
                 && !checkPositionIsEmpty(from) && checkPositionIsEmpty(to)){
             Token token = boardModel.removeOneTokenByPosition(parsePosition(from));
             boardModel.addOneTokenIntoPosition(token, parsePosition(to));
@@ -192,7 +242,6 @@ public class BoardImpl implements Board, EventSource {
 
     /**
      * Players can remove one token from the board (mill state)
-     * (Sprint2 does not test this)
      *
      * @param player
      * @param coordinate
@@ -200,7 +249,63 @@ public class BoardImpl implements Board, EventSource {
      */
     @Override
     public void removeToken(Player player, Coordinate coordinate) throws InvalidCoordinate {
-        // (Sprint2 does not test this)
+
+        // check the position is valid
+        if (!checkPositionValid(coordinate)){
+            throw new InvalidCoordinate("Invalid Coordinate: " + coordinate.toString()+ " !");
+        }
+
+        // check player can not remove their own token
+        if (boardModel.selectOnePosition(parsePosition(coordinate)).peekToken().getOwner().equals(player)){
+            throw new InvalidCoordinate("Invalid Coordinate: " + coordinate.toString()+ ". You cannot remove your own token!");
+        }
+
+        // check position is not empty
+        if (checkPositionIsEmpty(coordinate)){
+            throw new InvalidCoordinate("Invalid Coordinate: No token here. Please Choose again!");
+        }
+
+        // remove token
+        try {
+            // check remove is valid
+            // token that have formed a mill cannot be removed from the board
+            if (checkRemoveValid(player,coordinate)){
+                // process the remove token behaviour
+                Token token = boardModel.removeOneTokenByPosition(parsePosition(coordinate));
+
+                // notify listeners through place event
+                Event<Board> millEvent = new MillingEvent<>();
+                millEvent.setEventSource(this);
+                millEvent.setEventContext(token);
+                notifyListeners(millEvent);
+
+            } else {
+                throw new InvalidCoordinate("Invalid Coordinate: You can not remove token that have formed a mill. Please Choose again!");
+            }
+        } catch (InvalidPosition e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    /**
+     * Players can fly one token on the board
+     *
+     * @param from   start coordinate
+     * @param to     destination coordinate
+     * @throws InvalidCoordinate invalid coordinate exception
+     */
+    @Override
+    public void flyToken(Coordinate from, Coordinate to) throws InvalidCoordinate {
+        if (checkPositionValid(from) && checkPositionValid(to)
+                && !checkPositionIsEmpty(from) && checkPositionIsEmpty(to)){
+            Token token = boardModel.removeOneTokenByPosition(parsePosition(from));
+            boardModel.addOneTokenIntoPosition(token, parsePosition(to));
+        } else {
+            throw new InvalidCoordinate("Invalid Coordinate: " + to.toString()+ " !");
+        }
+
     }
 
     /**
@@ -225,7 +330,10 @@ public class BoardImpl implements Board, EventSource {
      */
     @Override
     public Boolean checkMoveValid(Coordinate from, Coordinate to) throws InvalidCoordinate {
-        return true; // ONLY Sprint2 always true (Sprint2 does not test this)
+        if (!validMovesMap.get(parsePosition(from)).contains(parsePosition(to))){
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -239,7 +347,23 @@ public class BoardImpl implements Board, EventSource {
      */
     @Override
     public Boolean checkRemoveValid(Player player, Coordinate coordinate) throws InvalidPosition {
-        return true; // (Sprint2 does not test this)
+        try {
+            if (boardModel.selectOnePosition(parsePosition(coordinate)).peekToken().getOwner().equals(player)){
+                throw new InvalidCoordinate("Invalid Coordinate: " + coordinate.toString()+ ". You cannot remove your own token!");
+            }
+
+            List<Integer> list = triggerNodeMap.get(parsePosition(coordinate));
+            for (Integer integer : list) {
+                if(trigger.getTriggerNodeState(integer)){
+                    return false;
+                }
+            }
+
+        } catch (InvalidCoordinate e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
     }
 
     /**

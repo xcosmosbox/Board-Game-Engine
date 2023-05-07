@@ -13,6 +13,8 @@ import group.gan.mvc.controller.turn.Turn;
 import group.gan.mvc.controller.turn.impl.TurnImpl;
 import group.gan.mvc.model.board.BoardModel;
 import group.gan.mvc.model.board.impl.BoardModelImpl;
+import group.gan.mvc.model.board.trigger.Trigger;
+import group.gan.mvc.model.board.trigger.impl.BoardMillTriggerImpl;
 import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.model.game.impl.GameModelImpl;
 import group.gan.mvc.model.player.PlayerModel;
@@ -20,6 +22,7 @@ import group.gan.mvc.model.player.impl.PlayerModelImpl;
 import group.gan.mvc.model.token.Token;
 import group.gan.mvc.model.token.impl.TokenImpl;
 import group.gan.mvc.view.View;
+import group.gan.mvc.view.factory.impl.ShowRuleViewFactory;
 import group.gan.mvc.view.impl.IntroduceView;
 import group.gan.mvc.view.impl.ShowRuleWordOnly;
 import group.gan.utils.Display;
@@ -41,10 +44,40 @@ public class Application {
      * @param args
      */
     public static void main(String[] args) {
+        // print introduce view page
+        Display display = new Display();
+        View introView = new IntroduceView();
+
+        // promote user input
+        Scanner scanner = new Scanner(System.in);
+        int selection;
+        do {
+            introView.draw(display);
+            display.displayMessage("  Your selection: ");
+            selection = scanner.nextInt();
+            switch (selection){
+                case 1:
+                    newGame(); // game start
+                    break;
+                case 2:
+                    showRule(); // show rule (Word Only)
+                    break;
+                case 3:
+                    display.displayMessage("  See you next time!"); // print exit message
+                    break;
+            }
+        } while (selection != 3);
+    }
+
+    /**
+     * assemble a new game
+     */
+    public static void newGame(){
         // init the BoardModel
         BoardModel boardModel = new BoardModelImpl();
+        Trigger trigger = new BoardMillTriggerImpl();
         // init board
-        Board board = new BoardImpl(boardModel);
+        Board board = new BoardImpl(boardModel,trigger);
 
         // init the player-1 Model
         PlayerModel playerModel1 = new PlayerModelImpl("Player-1");
@@ -95,37 +128,16 @@ public class Application {
         // inject GameModel into Game Facade
         game.build(gameModel);
 
-        // print introduce view page
-        Display display = new Display();
-        View introView = new IntroduceView();
-
-
-        // promote user input
-        Scanner scanner = new Scanner(System.in);
-        int selection;
-        do {
-            introView.draw(display);
-            display.displayMessage("  Your selection: ");
-            selection = scanner.nextInt();
-            switch (selection){
-                case 1:
-                    game.run(); // game start
-                    break;
-                case 2:
-                    showRule(); // show rule (Word Only)
-                    break;
-                case 3:
-                    display.displayMessage("  See you next time!"); // print exit message
-                    break;
-            }
-        } while (selection != 3);
-//        game.run();
+        // start game
+        game.run();
     }
 
-    // print game rule
+    /**
+     * Print the game rule (Word only)
+     */
     public static void showRule(){
         Display display = new Display();
-        ShowRuleWordOnly showRuleWordOnly = new ShowRuleWordOnly();
+        View showRuleWordOnly = new ShowRuleViewFactory().createView();
         showRuleWordOnly.draw(display);
         display.displayMessage(display.getNewLine() + "  Press enter key to continue..." + display.getNewLine());
         Scanner scanner = new Scanner(System.in);
