@@ -289,6 +289,26 @@ public class BoardImpl implements Board, EventSource {
     }
 
     /**
+     * Players can fly one token on the board
+     *
+     * @param player game player
+     * @param from   start coordinate
+     * @param to     destination coordinate
+     * @throws InvalidCoordinate invalid coordinate exception
+     */
+    @Override
+    public void flyToken(Player player, Coordinate from, Coordinate to) throws InvalidCoordinate {
+        if (checkPositionValid(from) && checkPositionValid(to)
+                && !checkPositionIsEmpty(from) && checkPositionIsEmpty(to)){
+            Token token = boardModel.removeOneTokenByPosition(parsePosition(from));
+            boardModel.addOneTokenIntoPosition(token, parsePosition(to));
+        } else {
+            throw new InvalidCoordinate("Invalid Coordinate: " + to.toString()+ " !");
+        }
+
+    }
+
+    /**
      * Check whether the Coordinate is within the allowed range of the chessboard
      *
      * @param coordinate

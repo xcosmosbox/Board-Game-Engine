@@ -45,6 +45,15 @@ public interface Board {
     void removeToken(Player player, Coordinate coordinate) throws InvalidCoordinate;
 
     /**
+     * Players can fly one token on the board
+     * @param player game player
+     * @param from start coordinate
+     * @param to destination coordinate
+     * @throws InvalidCoordinate invalid coordinate exception
+     */
+    void flyToken(Player player, Coordinate from, Coordinate to) throws InvalidCoordinate;
+
+    /**
      * Check whether the Coordinate is within the allowed range of the chessboard
      * @param coordinate
      * @return
