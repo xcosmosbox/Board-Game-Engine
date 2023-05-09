@@ -63,7 +63,7 @@ public class BoardModelChangeEvent<T> implements Event<T> {
      * @return Object
      */
     @Override
-    public Object geEventContext() {
+    public Object getEventContext() {
         return eventContext;
     }
 

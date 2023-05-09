@@ -26,7 +26,7 @@ public interface Event<T> {
      * Get the specific content of the event (Optional)
      * @return Object
      */
-    Object geEventContext();
+    Object getEventContext();
 
     /**
      * Set the specific content of the event (Optional)

@@ -63,7 +63,7 @@ public class PlacingEvent<T> implements Event<T> {
      * @return Object
      */
     @Override
-    public Object geEventContext() {
+    public Object getEventContext() {
         return eventContext;
     }
 

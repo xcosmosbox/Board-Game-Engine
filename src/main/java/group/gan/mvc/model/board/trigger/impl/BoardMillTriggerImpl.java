@@ -50,11 +50,11 @@ public class BoardMillTriggerImpl implements Trigger {
     @Override
     public void onEvent(Event event) {
         if (event.getEventType() == EventType.BOARD_CHANGE){
-            if (event.geEventContext().getClass().isArray()
-                    && event.geEventContext().getClass().getComponentType().equals(Position.class)) {
+            if (event.getEventContext().getClass().isArray()
+                    && event.getEventContext().getClass().getComponentType().equals(Position.class)) {
                 // init the counter and casting event context to Position[] type
                 int counter = 0;
-                Position[] positions = (Position[]) event.geEventContext();
+                Position[] positions = (Position[]) event.getEventContext();
 
                 // verify whether is form a new mill
                 for (MillNode millNode : millNodes) {

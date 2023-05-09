@@ -169,6 +169,8 @@ public class BoardImpl implements Board, EventSource {
         // read the number of positions
         int numberOfPositions = Integer.parseInt(MillTriggerConfigBundle.getString("numberOfPositions"));
 
+        //initialising triggerNodeMap
+        triggerNodeMap=new HashMap<>();
         // init the key for triggerNodeMap
         for (int i = 0; i < numberOfPositions; i++) {
             triggerNodeMap.put(i,new ArrayList<>());

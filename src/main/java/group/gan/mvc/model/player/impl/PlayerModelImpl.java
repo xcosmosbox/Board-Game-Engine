@@ -215,7 +215,7 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
         // Check if the event type is PLACE
         if (type == EventType.PLACE) {
             // Get the event context object from the event
-            Object obj = event.geEventContext();
+            Object obj = event.getEventContext();
             // Check if the event context object is an instance of Token
             if (obj instanceof Token) {
                 // Cast the event context object to a Token object
@@ -237,7 +237,7 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
             // Check if the event type is MILL
         } else if (type == EventType.MILL) {
             // Get the event context object from the event
-            Object obj = event.geEventContext();
+            Object obj = event.getEventContext();
             // Check if the event context object is an instance of Token
             if (obj instanceof Token) {
                 // Cast the event context object to a Token object
