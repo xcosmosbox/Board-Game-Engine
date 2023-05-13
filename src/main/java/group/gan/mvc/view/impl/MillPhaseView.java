@@ -13,7 +13,6 @@ public class MillPhaseView implements View {
         stringBuilder.append("  Your select(integer): ");
 
         display.displayView(stringBuilder.toString());
-
     }
 
 
