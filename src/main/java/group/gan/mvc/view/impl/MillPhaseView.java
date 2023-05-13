@@ -6,6 +6,7 @@ import group.gan.utils.Display;
 public class MillPhaseView implements View {
     @Override
     public void draw(Display display) {
+        System.out.println("'test");
 
     }
 }
