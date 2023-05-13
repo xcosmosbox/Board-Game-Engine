@@ -87,7 +87,17 @@ public class TurnImpl implements Turn {
             Command filledCommand = currentPollable.fillCommand(newCommand);
             // Return the filled move command
             return filledCommand;
+            // If the command type is Mill and the current Pollable object exists
+        } else if (command.getCommandType() == CommandType.MILL && currentPollable != null) {
+            // Create a new mill command
+            Command newCommand = moveCommandFactory.createCommand(CommandType.MILL);
+            // Fill the new mill command with the necessary data
+            Command filledCommand = currentPollable.fillCommand(newCommand);
+            // Return the filled move command
+            return filledCommand;
+
         }
+
         // If conditions are not met, return null
         return null;
     }
