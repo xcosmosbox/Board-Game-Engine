@@ -16,6 +16,7 @@ import group.gan.mvc.view.View;
 import group.gan.utils.CommandTypeConverter;
 import group.gan.utils.Display;
 
+import java.util.InputMismatchException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -98,7 +99,18 @@ public class PlayerImpl implements Player, Pollable {
     @Override
     public Integer requestOneIntegerInput() {
         Scanner singleInput = new Scanner(System.in);
-        int input = singleInput.nextInt();
+        Integer input = null;
+
+        // Continually prompt the user for input until a valid integer is entered
+        while(input == null) {
+            try {
+                input = singleInput.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter an integer.");
+                singleInput.nextLine(); // Clear the current line to prepare for the next input
+            }
+        }
+
         return input;
     }
 
@@ -109,20 +121,34 @@ public class PlayerImpl implements Player, Pollable {
     @Override
     public Integer[] requestIntegersInput() {
         Scanner multipleInput = new Scanner(System.in);
-        String input = multipleInput.nextLine();
+        Integer[] intArray = null;
 
-        // Split the input string into an array
-        String[] inputArray = input.split(",");
 
-        // Convert the string array into an Integer array
-        Integer[] intArray = new Integer[inputArray.length];
+        // Continually prompt the user for input until two integers separated by a comma are entered
+        while(intArray == null) {
+            String input = multipleInput.nextLine();
 
-        try {
-            intArray[0] = Integer.parseInt(inputArray[0]);
-            intArray[1] = Integer.parseInt(inputArray[1]);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a string with two integers separated by a comma.");
+            // Split the input string into an array
+            String[] inputArray = input.split(",");
+
+            // Check if the array has exactly two elements
+            if(inputArray.length != 2) {
+                System.out.println("Invalid input. Please enter two integers separated by a comma.");
+                continue;
+            }
+
+            // Convert the string array into an Integer array
+            intArray = new Integer[2];
+
+            try {
+                intArray[0] = Integer.parseInt(inputArray[0].trim());
+                intArray[1] = Integer.parseInt(inputArray[1].trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter two integers separated by a comma.");
+                intArray = null; // Reset the intArray to null to continue the loop
+            }
         }
+
 
         return intArray;
 
