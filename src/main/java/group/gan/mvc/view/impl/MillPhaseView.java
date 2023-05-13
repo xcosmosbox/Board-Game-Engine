@@ -8,5 +8,6 @@ public class MillPhaseView implements View {
     public void draw(Display display) {
         System.out.println("'test");
 
+
     }
 }
