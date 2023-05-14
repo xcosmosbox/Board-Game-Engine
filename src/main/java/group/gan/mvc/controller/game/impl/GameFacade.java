@@ -110,7 +110,10 @@ public class GameFacade implements Game, EventListener {
         }
 
         // get winner and quit
-        quitForWin(gameModel.getWinner());
+        if (gameModel.getWinner() != null){
+            quitForWin(gameModel.getWinner());
+        }
+
 
     }
 
