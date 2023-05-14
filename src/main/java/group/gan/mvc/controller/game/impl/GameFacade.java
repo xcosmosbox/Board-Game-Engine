@@ -3,10 +3,15 @@ package group.gan.mvc.controller.game.impl;
 
 import group.gan.events.Event;
 import group.gan.events.EventListener;
+import group.gan.events.EventType;
 import group.gan.events.ListenerType;
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.controller.command.CommandType;
+import group.gan.mvc.controller.command.factory.impl.MillCommandFactory;
+import group.gan.mvc.controller.command.impl.MillCommand;
 import group.gan.mvc.controller.game.Game;
+import group.gan.mvc.controller.move.MoveStrategy;
+import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.view.View;
 import group.gan.mvc.view.impl.BoardView;
@@ -47,20 +52,15 @@ public class GameFacade implements Game, EventListener {
             View userInfoView = new PlayerInfoView(gameModel.getTurn().getPollableInstance());
             userInfoView.draw(display);
 
-            //parallel to move
 
             //main game loop
             // Request a command from the player
             Command command = gameModel.getTurn().runTurn();
 
-            if(command.getCommandType()){
-                gameModel.getTurn().getPollableInstance();
-
-            }
 
 
             // Issue & execute the command
-            //TODO: seperate MOVE and PLACE
+
             if (command.getCommandType() == CommandType.MOVE) {
                 command.init(this, gameModel.getBoard());
             } else if (command.getCommandType() == CommandType.QUIT) {
@@ -80,33 +80,28 @@ public class GameFacade implements Game, EventListener {
                 result = refillCommand.execute();
             }
 
-
-            // =========  FUTURE  =========
-            // In the following iteration, we will implement the operation of checking whether a mill has been formed
-            // and the player has taken a token. We will not implement this function in sprint2 for the time being
-            // =========  FUTURE  =========
-
             //check if there's a mill event.
             if(onEventMill){
+
                 //tell turn to ask for a command from player to remove a token on the board.
-                //check if the mill command is valid, if not ask again
-                //toggle onEventMill to false once command is executed.
-
-                //turnImpl.continueRun(); ask for a remove command if not, repeat.
+                Command playerNextCommand = gameModel.getTurn().continueRun();
+                playerNextCommand.init(gameModel.getBoard(),(Player) gameModel.getTurn().getPollableInstance());
+                boolean isValidCommand = playerNextCommand.execute();
+                while(!isValidCommand){
+                    MillCommandFactory millCommandFactory = new MillCommandFactory();
+                    Command playerRefillCommand = gameModel.getTurn().refillCommand(millCommandFactory.createCommand(CommandType.MILL));
+                    playerRefillCommand.init(gameModel.getBoard(),(Player)gameModel.getTurn().getPollableInstance());
+                    isValidCommand = playerRefillCommand.execute();
+                }
+                onEventMill = false;
             }
-
-            //a listener for a player on flying phase
-
 
             // Check if the game exits
             if (!quit) {
                 //start next turn
                 gameModel.getTurn().switchPollableObject();
             }
-
         }
-
-
     }
 
     /**
@@ -141,8 +136,9 @@ public class GameFacade implements Game, EventListener {
 
     @Override
     public void onEvent(Event event) {
-        //check if event is mill,
-        onEventMill = true;
+        if(event.getEventType()== EventType.MILL) {
+            onEventMill = true;
+        }
     }
 
     @Override
