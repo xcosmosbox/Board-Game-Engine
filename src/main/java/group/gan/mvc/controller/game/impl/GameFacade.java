@@ -23,7 +23,7 @@ import group.gan.utils.Display;
 /**
  * @author Tianyi Liu
  * Class Name: GameImpl
- * @version 1.1
+ * @version 1.2
  * created by: 25/4/2023
  */
 public class GameFacade implements Game, EventListener {
@@ -43,7 +43,7 @@ public class GameFacade implements Game, EventListener {
     private Boolean onEventMill = false;
 
     /**
-     * Starting game
+     * Starting game, this is the main game loop
      */
     @Override
     public void run() {
@@ -141,6 +141,10 @@ public class GameFacade implements Game, EventListener {
         this.gameModel = gameModel;
     }
 
+    /**
+     * a method listen to trigger and toggle onEventMill
+     * @param event
+     */
     @Override
     public void onEvent(Event event) {
         if (event.getEventType() == EventType.MILL) {
@@ -148,8 +152,12 @@ public class GameFacade implements Game, EventListener {
         }
     }
 
+    /**
+     * a method returns ListenerType.GAME
+     * @return ListenerType
+     */
     @Override
     public ListenerType getListenerType() {
-        return null;
+        return ListenerType.GAME;
     }
 }

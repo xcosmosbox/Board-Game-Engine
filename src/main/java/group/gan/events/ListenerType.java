@@ -1,8 +1,14 @@
 package group.gan.events;
 
+/**
+ * enum class for listenerType
+ * @author Yuxiang feng, tianyi liu
+ * @version 1.1
+ */
 public enum ListenerType {
     PLAYER,
     TRIGGER,
-    ALL
+    ALL,
+    GAME
 
 }
