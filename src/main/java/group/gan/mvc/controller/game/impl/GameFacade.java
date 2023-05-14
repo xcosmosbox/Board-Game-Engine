@@ -50,10 +50,10 @@ public class GameFacade implements Game, EventListener {
         Display display = new Display();
         while (!gameModel.isGameOver() && !quit) {
             // Render game board
-            View boardView = new BoardView(gameModel.getBoard().getAllPositionsFromBoard());
+            View boardView = new BoardViewFactory(gameModel.getBoard().getAllPositionsFromBoard()).createView();
             boardView.draw(display);
             //current player to act and token type
-            View userInfoView = new PlayerInfoView(gameModel.getTurn().getPollableInstance());
+            View userInfoView = new PlayerInfoViewFactory(gameModel.getTurn().getPollableInstance()).createView();
             userInfoView.draw(display);
 
 
