@@ -2,6 +2,7 @@ package group.gan.mvc.controller.player.impl;
 
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.controller.command.CommandType;
+import group.gan.mvc.controller.command.impl.MillCommand;
 import group.gan.mvc.controller.command.impl.MoveCommand;
 import group.gan.mvc.controller.move.MoveStrategy;
 import group.gan.mvc.controller.move.factory.MoveStrategyFactory;
@@ -201,6 +202,9 @@ public class PlayerImpl implements Player, Pollable {
                 ((MoveCommand) command).initMoveStrategy(moveStrategy);
             }
 
+        }else if (command.getCommandType() == CommandType.MILL) {
+            // Cast the command to MillCommand and initialize it with the player
+            ((MillCommand) command).init(this);
         }
 
         return command;
