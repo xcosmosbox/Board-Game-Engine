@@ -12,11 +12,8 @@ import group.gan.mvc.controller.game.Game;
 import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.view.View;
-import group.gan.mvc.view.factory.ViewFactory;
 import group.gan.mvc.view.factory.impl.BoardViewFactory;
 import group.gan.mvc.view.factory.impl.PlayerInfoViewFactory;
-import group.gan.mvc.view.impl.BoardView;
-import group.gan.mvc.view.impl.PlayerInfoView;
 import group.gan.utils.Display;
 
 
@@ -88,7 +85,7 @@ public class GameFacade implements Game, EventListener {
                 View newBoardView = new BoardViewFactory(gameModel.getBoard().getAllPositionsFromBoard()).createView();
                 newBoardView.draw(display);
 
-                View  newPlayerInfoView = new PlayerInfoViewFactory(gameModel.getTurn().getPollableInstance()).createView();
+                View newPlayerInfoView = new PlayerInfoViewFactory(gameModel.getTurn().getPollableInstance()).createView();
                 newPlayerInfoView.draw(display);
                 //tell turn to ask for a command from player to remove a token on the board.
                 Command playerNextCommand = gameModel.getTurn().continueRun();
@@ -143,17 +140,20 @@ public class GameFacade implements Game, EventListener {
 
     /**
      * a method listen to trigger and toggle onEventMill
-     * @param event
+     *
+     * @param event mill event
      */
     @Override
     public void onEvent(Event event) {
-        if (event.getEventType() == EventType.MILL) {
-            onEventMill = true;
+        if (event != null) {
+            if (event.getEventType() == EventType.MILL) {
+                onEventMill = true;
+            }
         }
     }
 
     /**
-     * a method returns ListenerType.GAME
+     * a method returns ListenerType game
      * @return ListenerType
      */
     @Override
