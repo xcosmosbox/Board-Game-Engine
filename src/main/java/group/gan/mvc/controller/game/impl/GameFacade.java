@@ -13,6 +13,7 @@ import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.view.View;
 import group.gan.mvc.view.factory.impl.BoardViewFactory;
+import group.gan.mvc.view.factory.impl.MillPhaseViewFactory;
 import group.gan.mvc.view.factory.impl.PlayerInfoViewFactory;
 import group.gan.utils.Display;
 
@@ -87,6 +88,10 @@ public class GameFacade implements Game, EventListener {
 
                 View newPlayerInfoView = new PlayerInfoViewFactory(gameModel.getTurn().getPollableInstance()).createView();
                 newPlayerInfoView.draw(display);
+
+                View millView = new MillPhaseViewFactory().createView();
+                millView.draw(display);
+
                 //tell turn to ask for a command from player to remove a token on the board.
                 Command playerNextCommand = gameModel.getTurn().continueRun();
                 playerNextCommand.init(gameModel.getBoard(), (Player) gameModel.getTurn().getPollableInstance());

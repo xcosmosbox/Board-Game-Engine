@@ -1,11 +1,14 @@
 package group.gan.mvc.controller.player.impl;
 
+import group.gan.exception.InvalidMenuChoose;
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.controller.command.CommandType;
 import group.gan.mvc.controller.command.impl.MillCommand;
 import group.gan.mvc.controller.command.impl.MoveCommand;
 import group.gan.mvc.controller.move.MoveStrategy;
 import group.gan.mvc.controller.move.factory.MoveStrategyFactory;
+import group.gan.mvc.controller.move.factory.impl.FlyingStrategyFactory;
+import group.gan.mvc.controller.move.factory.impl.MillStrategyFactory;
 import group.gan.mvc.controller.move.factory.impl.MovingStrategyFactory;
 import group.gan.mvc.controller.move.factory.impl.PlacingStrategyFactory;
 import group.gan.mvc.controller.player.Player;
@@ -164,9 +167,20 @@ public class PlayerImpl implements Player, Pollable {
         // get the text message that will be displayed
         Display display = new Display();
         view.draw(display);
-        //get the user input
-        int input = requestOneIntegerInput();
-        return CommandTypeConverter.IntegerToCommandType(input, view);
+        CommandType commandType = null;
+
+        while (commandType == null){
+            //get the user input
+            int input = requestOneIntegerInput();
+
+            try {
+                commandType = CommandTypeConverter.IntegerToCommandType(input, view);
+            } catch (InvalidMenuChoose e) {
+                System.out.println(e);
+            }
+        }
+
+        return commandType;
 
     }
 
@@ -194,7 +208,9 @@ public class PlayerImpl implements Player, Pollable {
             } else if (this.playerModel.getState() == PlayerStateEnum.MOVING) {
                 moveStrategyFactory = new MovingStrategyFactory();
 //                moveCommand.initMoveStrategy(moveStrategyFactory.createStrategy());
-            } // ...Subsequent needs to implement flying
+            } else if (this.playerModel.getState() == PlayerStateEnum.FLYING) {
+                moveStrategyFactory = new FlyingStrategyFactory();
+            }
 
             if (moveStrategyFactory != null){
                 MoveStrategy moveStrategy = moveStrategyFactory.createStrategy();
@@ -205,6 +221,9 @@ public class PlayerImpl implements Player, Pollable {
         }else if (command.getCommandType() == CommandType.MILL) {
             // Cast the command to MillCommand and initialize it with the player
             ((MillCommand) command).init(this);
+            MoveStrategy moveStrategy = new MillStrategyFactory().createStrategy();
+            moveStrategy.initDescription(this);
+            command.initMoveStrategy(moveStrategy);
         }
 
         return command;

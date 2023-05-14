@@ -11,21 +11,18 @@ import group.gan.utils.Display;
 
 /**
  * @author: fengyuxiang
- * @ClassName: FlyingStrategy
+ * @ClassName: MillStrategy
  * @version: 1.0
  * @description:
- * @create: 8/5/2023
+ * @create: 14/5/2023
  */
-public class FlyingStrategy implements MoveStrategy {
+public class MillStrategy implements MoveStrategy {
 
     /**
-     * Coordinate for from
+     * Coordinate for target who killed token
      */
-    private Coordinate from;
-    /**
-     * Coordinate for to
-     */
-    private Coordinate to;
+    private Coordinate target;
+
 
     /**
      * Run a specific strategy
@@ -37,12 +34,16 @@ public class FlyingStrategy implements MoveStrategy {
     @Override
     public Boolean executeStrategy(Player player, Board board) {
         try {
-            if (!board.getOnePositionFromBoard(from).isEmpty()){
-                if(board.getOnePositionFromBoard(from).peekToken().getOwner() != player){
-                    throw new InvalidTokenChoose("This is not your token!");
+            if(!board.getOnePositionFromBoard(target).isEmpty()){
+                if (board.getOnePositionFromBoard(target).peekToken().getOwner() == player){
+                    throw new InvalidTokenChoose("You cannot choose you own token!");
                 }
+            } else {
+              throw new InvalidTokenChoose("No Token in here!");
             }
-            board.flyToken(from,to);
+
+            board.removeToken(player, target);
+
         } catch (InvalidTokenChoose e) {
             System.out.println(e);
             return false;
@@ -51,7 +52,6 @@ public class FlyingStrategy implements MoveStrategy {
             return false;
         }
 
-
         return true;
     }
 
@@ -59,12 +59,10 @@ public class FlyingStrategy implements MoveStrategy {
     public void initDescription(Player player) {
         Display display = new Display();
 
-        display.displayMessage("  Please enter the coordinate of the token you want to fly(separate two numbers with a comma): ");
-        Integer[] firstInputs = player.requestIntegersInput();
-        from = new CoordinateImpl(firstInputs[0],firstInputs[1]);
+        display.displayMessage("Please enter the coordinate of the token you want to kill (separate two numbers with a comma): ");
+        Integer[] coordinate = player.requestIntegersInput();
+        target = new CoordinateImpl(coordinate[0],coordinate[1]);
 
-        display.displayMessage("  Please enter the destination coordinate of the token(separate two numbers with a comma): ");
-        Integer[] secondInputs = player.requestIntegersInput();
-        to = new CoordinateImpl(secondInputs[0],secondInputs[1]);
+
     }
 }

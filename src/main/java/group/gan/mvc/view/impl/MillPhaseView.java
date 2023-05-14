@@ -8,7 +8,9 @@ public class MillPhaseView implements View {
     public void draw(Display display) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("  ********************************************\n");
-        stringBuilder.append("  1: Choose Token\n");
+        stringBuilder.append("       Congratulations You Formed A Mill!\n");
+        stringBuilder.append("  ********************************************\n");
+        stringBuilder.append("  1: Choose Token To Kill\n");
         stringBuilder.append("  2: Quit Game\n");
         stringBuilder.append("  Your select(integer): ");
 
