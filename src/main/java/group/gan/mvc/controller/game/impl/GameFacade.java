@@ -8,12 +8,12 @@ import group.gan.events.ListenerType;
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.controller.command.CommandType;
 import group.gan.mvc.controller.command.factory.impl.MillCommandFactory;
-import group.gan.mvc.controller.command.impl.MillCommand;
 import group.gan.mvc.controller.game.Game;
-import group.gan.mvc.controller.move.MoveStrategy;
 import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.view.View;
+import group.gan.mvc.view.factory.ViewFactory;
+import group.gan.mvc.view.factory.impl.BoardViewFactory;
 import group.gan.mvc.view.impl.BoardView;
 import group.gan.mvc.view.impl.PlayerInfoView;
 import group.gan.utils.Display;
@@ -22,7 +22,7 @@ import group.gan.utils.Display;
 /**
  * @author Tianyi Liu
  * Class Name: GameImpl
- * @version 1.0
+ * @version 1.1
  * created by: 25/4/2023
  */
 public class GameFacade implements Game, EventListener {
@@ -35,8 +35,11 @@ public class GameFacade implements Game, EventListener {
      * a boolean value indicating whether the game needs to exit
      */
     private Boolean quit = false;
+    /**
+     * a boolean value checking if there's a Mill event
+     */
 
-    private Boolean onEventMill=false;
+    private Boolean onEventMill = false;
 
     /**
      * Starting game
@@ -57,8 +60,6 @@ public class GameFacade implements Game, EventListener {
             // Request a command from the player
             Command command = gameModel.getTurn().runTurn();
 
-
-
             // Issue & execute the command
 
             if (command.getCommandType() == CommandType.MOVE) {
@@ -69,7 +70,7 @@ public class GameFacade implements Game, EventListener {
             Boolean result = command.execute();
 
             // check execution result, if result == false, retrieve coordinates
-            while (!result){
+            while (!result) {
                 Command refillCommand = gameModel.getTurn().refillCommand(command);
                 // Issue & execute the command
                 if (refillCommand.getCommandType() == CommandType.MOVE) {
@@ -81,16 +82,18 @@ public class GameFacade implements Game, EventListener {
             }
 
             //check if there's a mill event.
-            if(onEventMill){
+            if (onEventMill) {
 
+                View view = new BoardViewFactory(gameModel.getBoard().getAllPositionsFromBoard()).createView();
+                view.draw(display);
                 //tell turn to ask for a command from player to remove a token on the board.
                 Command playerNextCommand = gameModel.getTurn().continueRun();
-                playerNextCommand.init(gameModel.getBoard(),(Player) gameModel.getTurn().getPollableInstance());
+                playerNextCommand.init(gameModel.getBoard(), (Player) gameModel.getTurn().getPollableInstance());
                 boolean isValidCommand = playerNextCommand.execute();
-                while(!isValidCommand){
+                while (!isValidCommand) {
                     MillCommandFactory millCommandFactory = new MillCommandFactory();
                     Command playerRefillCommand = gameModel.getTurn().refillCommand(millCommandFactory.createCommand(CommandType.MILL));
-                    playerRefillCommand.init(gameModel.getBoard(),(Player)gameModel.getTurn().getPollableInstance());
+                    playerRefillCommand.init(gameModel.getBoard(), (Player) gameModel.getTurn().getPollableInstance());
                     isValidCommand = playerRefillCommand.execute();
                 }
                 onEventMill = false;
@@ -136,7 +139,7 @@ public class GameFacade implements Game, EventListener {
 
     @Override
     public void onEvent(Event event) {
-        if(event.getEventType()== EventType.MILL) {
+        if (event.getEventType() == EventType.MILL) {
             onEventMill = true;
         }
     }
