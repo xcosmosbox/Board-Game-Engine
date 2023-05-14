@@ -47,11 +47,20 @@ public class GameFacade implements Game, EventListener {
             View userInfoView = new PlayerInfoView(gameModel.getTurn().getPollableInstance());
             userInfoView.draw(display);
 
+            //parallel to move
+
             //main game loop
             // Request a command from the player
             Command command = gameModel.getTurn().runTurn();
 
+            if(command.getCommandType()){
+                gameModel.getTurn().getPollableInstance();
+
+            }
+
+
             // Issue & execute the command
+            //TODO: seperate MOVE and PLACE
             if (command.getCommandType() == CommandType.MOVE) {
                 command.init(this, gameModel.getBoard());
             } else if (command.getCommandType() == CommandType.QUIT) {
@@ -82,7 +91,12 @@ public class GameFacade implements Game, EventListener {
                 //tell turn to ask for a command from player to remove a token on the board.
                 //check if the mill command is valid, if not ask again
                 //toggle onEventMill to false once command is executed.
+
+                //turnImpl.continueRun(); ask for a remove command if not, repeat.
             }
+
+            //a listener for a player on flying phase
+
 
             // Check if the game exits
             if (!quit) {

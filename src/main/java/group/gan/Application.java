@@ -76,6 +76,9 @@ public class Application {
         // init the BoardModel
         BoardModel boardModel = new BoardModelImpl();
         Trigger trigger = new BoardMillTriggerImpl();
+
+        ((BoardModelImpl)boardModel).addListener(trigger);
+
         // init board
         Board board = new BoardImpl(boardModel,trigger);
 
@@ -127,7 +130,7 @@ public class Application {
         Game game = new GameFacade();
         // inject GameModel into Game Facade
         game.build(gameModel);
-
+        trigger.addListener((EventListener) game);
         // start game
         game.run();
     }
