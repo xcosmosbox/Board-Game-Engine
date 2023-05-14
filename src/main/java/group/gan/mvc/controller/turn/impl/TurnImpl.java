@@ -9,6 +9,7 @@ import group.gan.mvc.controller.command.factory.impl.QuitCommandFactory;
 import group.gan.mvc.controller.turn.Pollable;
 import group.gan.mvc.controller.turn.Turn;
 import group.gan.mvc.view.factory.FacViewFactory;
+import group.gan.mvc.view.factory.impl.MillPhaseViewFactory;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -69,12 +70,18 @@ public class TurnImpl implements Turn {
     @Override
     public Command continueRun() {
         if (currentPollable != null) {
-            CommandType commandType = CommandType.MILL;
+            CommandType commandType = currentPollable.poll(new MillPhaseViewFactory().createView());
             // Create a new mill command
             Command command = new MillCommandFactory().createCommand(commandType);
-            // Fill the mill command with the necessary data
-            Command filledCommand = currentPollable.fillCommand(command);
-            return filledCommand;
+
+            if (command.getCommandType() == CommandType.MILL){
+                // Fill the mill command with the necessary data
+                Command filledCommand = currentPollable.fillCommand(command);
+                return filledCommand;
+            } else {
+                return command;
+            }
+
         }
         // If the current Pollable object is null, return null
         return null;
@@ -99,7 +106,7 @@ public class TurnImpl implements Turn {
             // If the command type is Mill and the current Pollable object exists
         } else if (command.getCommandType() == CommandType.MILL && currentPollable != null) {
             // Create a new mill command
-            Command newCommand = moveCommandFactory.createCommand(CommandType.MILL);
+            Command newCommand = new MillCommandFactory().createCommand(CommandType.MILL);
             // Fill the new mill command with the necessary data
             Command filledCommand = currentPollable.fillCommand(newCommand);
             // Return the filled move command

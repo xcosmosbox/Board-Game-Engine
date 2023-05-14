@@ -5,7 +5,6 @@ import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.controller.turn.Turn;
 import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.model.game.state.GameState;
-import group.gan.mvc.model.game.state.impl.GameStateImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +28,8 @@ public class GameModelImpl implements GameModel {
     /**
      * no-parameter constructor
      */
-    public GameModelImpl() {
-        gameState = new GameStateImpl();
+    public GameModelImpl(GameState gameState) {
+        this.gameState = gameState;
     }
 
     /**

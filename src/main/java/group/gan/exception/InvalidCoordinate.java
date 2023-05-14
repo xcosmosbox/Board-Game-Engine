@@ -172,8 +172,6 @@ public class InvalidCoordinate extends Exception{
 
     @Override
     public String toString() {
-        return "InvalidCoordinate{" +
-                "msg='" + msg + '\'' +
-                '}';
+        return "  " + msg;
     }
 }

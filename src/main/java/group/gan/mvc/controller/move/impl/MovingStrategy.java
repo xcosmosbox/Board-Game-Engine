@@ -33,7 +33,7 @@ public class MovingStrategy implements MoveStrategy {
         try {
             if (!board.getOnePositionFromBoard(from).isEmpty()){
                 if(board.getOnePositionFromBoard(from).peekToken().getOwner() != player){
-                    throw new InvalidTokenChoose("This is not your token!");
+                    throw new InvalidTokenChoose("  This is not your token!");
                 }
             }
             board.moveToken(from,to);

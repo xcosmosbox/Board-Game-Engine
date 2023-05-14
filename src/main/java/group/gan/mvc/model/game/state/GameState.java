@@ -1,6 +1,8 @@
 package group.gan.mvc.model.game.state;
 
-public interface GameState {
+import group.gan.events.EventListener;
+
+public interface GameState extends EventListener {
     /**
      * check game is over
      * @return

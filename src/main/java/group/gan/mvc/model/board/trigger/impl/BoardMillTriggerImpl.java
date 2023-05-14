@@ -51,7 +51,7 @@ public class BoardMillTriggerImpl implements Trigger {
     public void onEvent(Event event) {
         if (event.getEventType() == EventType.BOARD_CHANGE){
             if (event.getEventContext().getClass().isArray()
-                    && event.getEventContext().getClass().getComponentType().equals(Position.class)) {
+                    && Position.class.isAssignableFrom(event.getEventContext().getClass().getComponentType())) {
                 // init the counter and casting event context to Position[] type
                 int counter = 0;
                 Position[] positions = (Position[]) event.getEventContext();

@@ -17,16 +17,19 @@ import group.gan.mvc.model.board.trigger.Trigger;
 import group.gan.mvc.model.board.trigger.impl.BoardMillTriggerImpl;
 import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.model.game.impl.GameModelImpl;
+import group.gan.mvc.model.game.state.GameState;
+import group.gan.mvc.model.game.state.impl.GameStateImpl;
 import group.gan.mvc.model.player.PlayerModel;
 import group.gan.mvc.model.player.impl.PlayerModelImpl;
 import group.gan.mvc.model.token.Token;
 import group.gan.mvc.model.token.impl.TokenImpl;
 import group.gan.mvc.view.View;
+import group.gan.mvc.view.factory.impl.GameHeaderViewFactory;
+import group.gan.mvc.view.factory.impl.IntroViewFactory;
 import group.gan.mvc.view.factory.impl.ShowRuleViewFactory;
-import group.gan.mvc.view.impl.IntroduceView;
-import group.gan.mvc.view.impl.ShowRuleWordOnly;
 import group.gan.utils.Display;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -46,26 +49,38 @@ public class Application {
     public static void main(String[] args) {
         // print introduce view page
         Display display = new Display();
-        View introView = new IntroduceView();
+
+        // Display the game title
+        new GameHeaderViewFactory().createView().draw(display);
 
         // promote user input
         Scanner scanner = new Scanner(System.in);
         int selection;
         do {
-            introView.draw(display);
+            new IntroViewFactory().createView().draw(display);
             display.displayMessage("  Your selection: ");
-            selection = scanner.nextInt();
-            switch (selection){
-                case 1:
-                    newGame(); // game start
-                    break;
-                case 2:
-                    showRule(); // show rule (Word Only)
-                    break;
-                case 3:
-                    display.displayMessage("  See you next time!"); // print exit message
-                    break;
+            try {
+                selection = scanner.nextInt();
+                switch (selection){
+                    case 1:
+                        newGame(); // game start
+                        break;
+                    case 2:
+                        showRule(); // show rule (Word Only)
+                        break;
+                    case 3:
+                        display.displayMessage("  See you next time!"); // print exit message
+                        break;
+                    default:
+                        display.displayMessage("  Invalid selection. Please try again."+ display.getNewLine());
+                        break;
+                }
+            } catch (InputMismatchException e){
+                display.displayMessage("  Invalid input. Please enter a valid integer." + display.getNewLine());
+                scanner.nextLine(); // clean cache
+                selection = 0; // continue loop
             }
+
         } while (selection != 3);
     }
 
@@ -119,8 +134,13 @@ public class Application {
         turn.registerPollableObject((Pollable) player1);
         turn.registerPollableObject((Pollable) player2);
 
+        // init Game State
+        GameState gameState = new GameStateImpl();
+        ((EventSource)playerModel1).addListener(gameState);
+        ((EventSource)playerModel2).addListener(gameState);
+
         // init Game model
-        GameModel gameModel = new GameModelImpl();
+        GameModel gameModel = new GameModelImpl(gameState);
         // set players, turn and board into game model
         gameModel.setPlayers(player1,player2);
         gameModel.setTurn(turn);

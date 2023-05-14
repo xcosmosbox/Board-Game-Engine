@@ -1,5 +1,8 @@
 package group.gan.mvc.model.game.state.impl;
 
+import group.gan.events.Event;
+import group.gan.events.EventType;
+import group.gan.events.ListenerType;
 import group.gan.mvc.model.game.state.GameState;
 import group.gan.mvc.model.game.state.GameStateEnum;
 
@@ -34,4 +37,25 @@ public class GameStateImpl implements GameState {
     }
 
 
+    /**
+     * Event listener interface
+     *
+     * @param event
+     */
+    @Override
+    public void onEvent(Event event) {
+        if (event.getEventType() == EventType.FAILED){
+            gameStateEnum = GameStateEnum.QUIT_FOR_WIN;
+        }
+    }
+
+    /**
+     * Get the type of listener
+     *
+     * @return
+     */
+    @Override
+    public ListenerType getListenerType() {
+        return ListenerType.GAME_STATE;
+    }
 }

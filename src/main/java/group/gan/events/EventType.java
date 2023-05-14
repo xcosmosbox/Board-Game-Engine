@@ -5,6 +5,7 @@ public enum EventType {
     MOVE,
     MILL, // means form one new mill
     FLY,
+    FAILED,
     BOARD_CHANGE,
     TOKEN_DEATH
 

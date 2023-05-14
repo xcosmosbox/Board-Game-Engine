@@ -13,8 +13,8 @@ import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.view.View;
 import group.gan.mvc.view.factory.impl.BoardViewFactory;
-import group.gan.mvc.view.factory.impl.MillPhaseViewFactory;
 import group.gan.mvc.view.factory.impl.PlayerInfoViewFactory;
+import group.gan.mvc.view.factory.impl.WinViewFactory;
 import group.gan.utils.Display;
 
 
@@ -89,9 +89,6 @@ public class GameFacade implements Game, EventListener {
                 View newPlayerInfoView = new PlayerInfoViewFactory(gameModel.getTurn().getPollableInstance()).createView();
                 newPlayerInfoView.draw(display);
 
-                View millView = new MillPhaseViewFactory().createView();
-                millView.draw(display);
-
                 //tell turn to ask for a command from player to remove a token on the board.
                 Command playerNextCommand = gameModel.getTurn().continueRun();
                 playerNextCommand.init(gameModel.getBoard(), (Player) gameModel.getTurn().getPollableInstance());
@@ -111,6 +108,10 @@ public class GameFacade implements Game, EventListener {
                 gameModel.getTurn().switchPollableObject();
             }
         }
+
+        // get winner and quit
+        quitForWin(gameModel.getWinner());
+
     }
 
     /**
@@ -127,10 +128,10 @@ public class GameFacade implements Game, EventListener {
      * Quit after winning
      */
     @Override
-    public void quitForWin() {
+    public void quitForWin(Player winner) {
         this.quit = true;
         Display display = new Display();
-        display.displayMessage("  You Won!" + display.getNewLine());
+        new WinViewFactory(winner).createView().draw(display);
     }
 
     /**

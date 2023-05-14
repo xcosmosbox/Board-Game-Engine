@@ -3,15 +3,14 @@ package group.gan.mvc.controller.board.impl;
 import group.gan.events.Event;
 import group.gan.events.EventListener;
 import group.gan.events.EventSource;
-import group.gan.events.impl.MillingEvent;
 import group.gan.events.impl.PlacingEvent;
+import group.gan.events.impl.TokenDeathEvent;
 import group.gan.exception.InvalidCoordinate;
 import group.gan.exception.InvalidPosition;
 import group.gan.mvc.controller.board.Board;
 import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.board.BoardModel;
 import group.gan.mvc.model.board.trigger.Trigger;
-import group.gan.mvc.model.board.trigger.impl.MillNode;
 import group.gan.mvc.model.coordinate.Coordinate;
 import group.gan.mvc.model.coordinate.impl.CoordinateImpl;
 import group.gan.mvc.model.position.Position;
@@ -276,10 +275,10 @@ public class BoardImpl implements Board, EventSource {
                 Token token = boardModel.removeOneTokenByPosition(parsePosition(coordinate));
 
                 // notify listeners through place event
-                Event<Board> millEvent = new MillingEvent<>();
-                millEvent.setEventSource(this);
-                millEvent.setEventContext(token);
-                notifyListeners(millEvent);
+                Event<Board> tokenDeathEventEvent = new TokenDeathEvent<>();
+                tokenDeathEventEvent.setEventSource(this);
+                tokenDeathEventEvent.setEventContext(token);
+                notifyListeners(tokenDeathEventEvent);
 
             } else {
                 throw new InvalidCoordinate("Invalid Coordinate: You can not remove token that have formed a mill. Please Choose again!");
@@ -354,18 +353,44 @@ public class BoardImpl implements Board, EventSource {
                 throw new InvalidCoordinate("Invalid Coordinate: " + coordinate.toString()+ ". You cannot remove your own token!");
             }
 
-            List<Integer> list = triggerNodeMap.get(parsePosition(coordinate));
-            for (Integer integer : list) {
-                if(trigger.getTriggerNodeState(integer)){
-                    return false;
+            // check all opponent's tokens is in mill
+            Position[] positionsSnapshot =  getAllPositionsFromBoard();
+            Boolean isAllOthersTokenInMill = true;
+            for (int i = 0; i < positionsSnapshot.length; i++) {
+                if (!positionsSnapshot[i].isEmpty()){
+                    if (!positionsSnapshot[i].peekToken().getOwner().equals(player)){
+                        List<Integer> nodeMapSnapshot = triggerNodeMap.get(i);
+                        Integer couter = 0;
+                        for (Integer integer : nodeMapSnapshot) {
+                            if (trigger.getTriggerNodeState(integer)){
+                                couter += 1;
+                            }
+                        }
+                        if (couter == 0){
+                            isAllOthersTokenInMill = false;
+                        }
+                    }
                 }
             }
+
+            if (isAllOthersTokenInMill){
+                return true;
+            } else {
+                List<Integer> list = triggerNodeMap.get(parsePosition(coordinate));
+                Boolean checkResult = true;
+                for (Integer integer : list) {
+                    if(trigger.getTriggerNodeState(integer)){
+                        checkResult = false;
+                    }
+                }
+                return checkResult;
+            }
+
 
         } catch (InvalidCoordinate e) {
             throw new RuntimeException(e);
         }
 
-        return true;
     }
 
     /**

@@ -38,6 +38,12 @@ public class MillNode {
      * @return
      */
     public boolean verify(Position[] positions){
+        for (int i : node) {
+            if (positions[i].isEmpty()){
+                state = false;
+                return false;
+            }
+        }
         // get the first symbol
         Character symbol = positions[node[0]].peekToken().getSymbol();
         // verify others positions whether have the same symbol

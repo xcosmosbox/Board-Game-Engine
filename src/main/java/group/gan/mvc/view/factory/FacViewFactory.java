@@ -3,6 +3,7 @@ package group.gan.mvc.view.factory;
 import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.controller.player.impl.PlayerImpl;
 import group.gan.mvc.controller.turn.Pollable;
+import group.gan.mvc.view.factory.impl.FlyPhaseViewFactory;
 import group.gan.mvc.view.factory.impl.MovePhaseViewFactory;
 import group.gan.mvc.view.factory.impl.PlacePhaseViewFactory;
 
@@ -21,6 +22,7 @@ public class FacViewFactory {
             switch (player.getPlayerState()){
                 case PLACING -> factory = new PlacePhaseViewFactory();
                 case MOVING -> factory = new MovePhaseViewFactory();
+                case FLYING -> factory = new FlyPhaseViewFactory();
             }
         }
         return factory;

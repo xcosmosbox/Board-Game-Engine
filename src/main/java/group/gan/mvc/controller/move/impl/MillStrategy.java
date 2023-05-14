@@ -36,10 +36,10 @@ public class MillStrategy implements MoveStrategy {
         try {
             if(!board.getOnePositionFromBoard(target).isEmpty()){
                 if (board.getOnePositionFromBoard(target).peekToken().getOwner() == player){
-                    throw new InvalidTokenChoose("You cannot choose you own token!");
+                    throw new InvalidTokenChoose("  You cannot choose you own token!");
                 }
             } else {
-              throw new InvalidTokenChoose("No Token in here!");
+              throw new InvalidTokenChoose("  No Token at this position!");
             }
 
             board.removeToken(player, target);
@@ -59,7 +59,7 @@ public class MillStrategy implements MoveStrategy {
     public void initDescription(Player player) {
         Display display = new Display();
 
-        display.displayMessage("Please enter the coordinate of the token you want to kill (separate two numbers with a comma): ");
+        display.displayMessage("  Please enter the coordinate of the token you want to kill (separate two numbers with a comma): ");
         Integer[] coordinate = player.requestIntegersInput();
         target = new CoordinateImpl(coordinate[0],coordinate[1]);
 

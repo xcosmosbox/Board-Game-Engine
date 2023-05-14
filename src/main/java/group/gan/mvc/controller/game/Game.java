@@ -1,5 +1,6 @@
 package group.gan.mvc.controller.game;
 
+import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.model.game.GameModel;
 
 /**
@@ -22,8 +23,9 @@ public interface Game {
 
     /**
      * Quit for winning
+     * @param winner game winner
      */
-    void quitForWin();
+    void quitForWin(Player winner);
 
     /**
      * Build the Game model

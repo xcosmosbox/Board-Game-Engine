@@ -1,19 +1,20 @@
 package group.gan.mvc.model.player.impl;
 
-import group.gan.events.Event;
-import group.gan.events.EventListener;
-import group.gan.events.EventType;
-import group.gan.events.ListenerType;
+import group.gan.events.*;
+import group.gan.events.impl.FailedEvent;
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.model.player.PlayerModel;
 import group.gan.mvc.model.player.PlayerStateEnum;
 import group.gan.mvc.model.token.Token;
 import group.gan.mvc.model.token.impl.TokenImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * PlayerModelImpl class implements the PlayerModel and EventListener interfaces.
  */
-public class PlayerModelImpl implements PlayerModel, EventListener {
+public class PlayerModelImpl implements PlayerModel, EventListener, EventSource {
 
     // Initialize the player name
     private String playerName;
@@ -36,6 +37,8 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
     private int loseCondition= 7;
     // Define the listener type for this class
     private ListenerType listenerType = ListenerType.PLAYER;
+
+    private List<EventListener> listeners = new ArrayList<>();
 
 
     /**
@@ -231,6 +234,10 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
                             // Set the player's state to MOVING
                             setState(PlayerStateEnum.MOVING);
                         }
+                        // skip the move state
+                        if (placeTokenCounter == tokens.length && millTokenCounter == flyCondition){
+                            setState(PlayerStateEnum.FLYING);
+                        }
                     }
                 }
             }
@@ -251,13 +258,19 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
                         // Increment the millTokenCounter
                         millTokenCounter++;
                         // Check if the millTokenCounter is equal to the flyCondition value
-                        if (millTokenCounter == flyCondition) {
+                        if (millTokenCounter == flyCondition && placeTokenCounter == tokens.length) {
                             // Set the player's state to FLYING
                             setState(PlayerStateEnum.FLYING);
                             // Check if the millTokenCounter is equal to the loseCondition value
                         } else if (millTokenCounter == loseCondition) {
                             // Set the player's state to FAILED
                             setState(PlayerStateEnum.FAILED);
+
+                            // create FAILED event
+                            Event<PlayerModelImpl> failedEvent = new FailedEvent<>();
+                            event.setEventSource(this);
+                            event.setEventContext(this);
+                            notifyListeners(failedEvent);
                         }
                     }
                 }
@@ -271,5 +284,53 @@ public class PlayerModelImpl implements PlayerModel, EventListener {
     @Override
     public ListenerType getListenerType() {
         return listenerType;
+    }
+
+    /**
+     * Add one listener
+     *
+     * @param listener
+     */
+    @Override
+    public void addListener(EventListener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * remove one listener
+     *
+     * @param listener
+     */
+    @Override
+    public void removeListener(EventListener listener) {
+        listeners.remove(listener);
+    }
+
+    /**
+     * Notify all listeners
+     */
+    @Override
+    public void notifyListeners() {
+        // nothing to do
+    }
+
+    /**
+     * Notify all listener and pass one Event
+     *
+     * @param event
+     */
+    @Override
+    public void notifyListeners(Event event) {
+        for (EventListener listener : listeners) {
+            listener.onEvent(event);
+        }
+    }
+
+    /**
+     * Remove all listeners
+     */
+    @Override
+    public void clearListeners() {
+        listeners = new ArrayList<>();
     }
 }

@@ -110,7 +110,7 @@ public class PlayerImpl implements Player, Pollable {
             try {
                 input = singleInput.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter an integer.");
+                System.out.print("  Invalid input. Please enter an integer: ");
                 singleInput.nextLine(); // Clear the current line to prepare for the next input
             }
         }
@@ -137,7 +137,7 @@ public class PlayerImpl implements Player, Pollable {
 
             // Check if the array has exactly two elements
             if(inputArray.length != 2) {
-                System.out.println("Invalid input. Please enter two integers separated by a comma.");
+                System.out.print("  Invalid input. Please enter two integers separated by a comma: ");
                 continue;
             }
 
@@ -148,7 +148,7 @@ public class PlayerImpl implements Player, Pollable {
                 intArray[0] = Integer.parseInt(inputArray[0].trim());
                 intArray[1] = Integer.parseInt(inputArray[1].trim());
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter two integers separated by a comma.");
+                System.out.print("  Invalid input. Please enter two integers separated by a comma: ");
                 intArray = null; // Reset the intArray to null to continue the loop
             }
         }
