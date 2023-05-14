@@ -3,6 +3,7 @@ package group.gan.mvc.controller.turn.impl;
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.controller.command.CommandType;
 import group.gan.mvc.controller.command.factory.CommandFactory;
+import group.gan.mvc.controller.command.factory.impl.MillCommandFactory;
 import group.gan.mvc.controller.command.factory.impl.MoveCommandFactory;
 import group.gan.mvc.controller.command.factory.impl.QuitCommandFactory;
 import group.gan.mvc.controller.turn.Pollable;
@@ -67,7 +68,15 @@ public class TurnImpl implements Turn {
      */
     @Override
     public Command continueRun() {
-        // sprint2 does not test this
+        if (currentPollable != null) {
+            CommandType commandType = CommandType.MILL;
+            // Create a new mill command
+            Command command = new MillCommandFactory().createCommand(commandType);
+            // Fill the mill command with the necessary data
+            Command filledCommand = currentPollable.fillCommand(command);
+            return filledCommand;
+        }
+        // If the current Pollable object is null, return null
         return null;
     }
 
