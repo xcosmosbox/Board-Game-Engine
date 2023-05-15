@@ -5,6 +5,7 @@ import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.controller.turn.Turn;
 import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.model.game.state.GameState;
+import group.gan.mvc.model.player.PlayerStateEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,12 +77,13 @@ public class GameModelImpl implements GameModel {
 
     /**
      * getter for player
+     *
      * @return
      */
     @Override
     public Player getPlayer() {
-        for(Player player: playerList){
-            if(player.equals(turn.getPollableInstance())){
+        for (Player player : playerList) {
+            if (player.equals(turn.getPollableInstance())) {
                 return player;
             }
         }
@@ -90,6 +92,7 @@ public class GameModelImpl implements GameModel {
 
     /**
      * getter for player list
+     *
      * @return
      */
     @Override
@@ -99,15 +102,17 @@ public class GameModelImpl implements GameModel {
 
     /**
      * setter for board
+     *
      * @param board
      */
     @Override
     public void setBoard(Board board) {
-        this.board=board;
+        this.board = board;
     }
 
     /**
      * getter for board
+     *
      * @return
      */
     @Override
@@ -116,19 +121,24 @@ public class GameModelImpl implements GameModel {
     }
 
     /**
-     *
      * @return winner
      */
     @Override
     public Player getWinner() {
-        if(gameState.isGameOver() && turn.getPollableInstance() instanceof Player){
-            return (Player) turn.getPollableInstance();
+        if (gameState.isGameOver() && turn.getPollableInstance() instanceof Player) {
+            if (((Player) turn.getPollableInstance()).getPlayerState() != PlayerStateEnum.FAILED) {
+                return (Player) turn.getPollableInstance();
+            } else {
+                turn.switchPollableObject();
+                return (Player) turn.getPollableInstance();
+            }
         }
         return null;
     }
 
     /**
      * check game is over
+     *
      * @return
      */
     @Override
