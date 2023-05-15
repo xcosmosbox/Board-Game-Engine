@@ -1,15 +1,16 @@
 package group.gan.mvc.model.player.impl;
 
 import group.gan.events.*;
+import group.gan.events.EventListener;
 import group.gan.events.impl.FailedEvent;
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.model.player.PlayerModel;
 import group.gan.mvc.model.player.PlayerStateEnum;
+import group.gan.mvc.model.position.Position;
 import group.gan.mvc.model.token.Token;
 import group.gan.mvc.model.token.impl.TokenImpl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * PlayerModelImpl class implements the PlayerModel and EventListener interfaces.
@@ -40,6 +41,14 @@ public class PlayerModelImpl implements PlayerModel, EventListener, EventSource 
 
     private List<EventListener> listeners = new ArrayList<>();
 
+    /**
+     * using Map to store all valid moves for each position
+     * for example, position 0 can move to position 1 or 9
+     * Map< 0, set<1,9> >
+     */
+    private Map<Integer, Set<Integer>> validMovesMap;
+
+
 
     /**
      * Constructor for PlayerModelImpl, initializes the player name, uid, and state.
@@ -49,6 +58,7 @@ public class PlayerModelImpl implements PlayerModel, EventListener, EventSource 
         this.playerName = playerName;
         this.playerUid = PlayerModelImpl.uid;
         this.state = PlayerStateEnum.PLACING;
+        this.initValidMovesMap();
         PlayerModelImpl.uid++;
     }
 
@@ -275,6 +285,45 @@ public class PlayerModelImpl implements PlayerModel, EventListener, EventSource 
                     }
                 }
             }
+        }else if (type == EventType.BOARD_CHANGE) {
+
+            if (event.getEventContext().getClass().isArray()
+                    && Position.class.isAssignableFrom(event.getEventContext().getClass().getComponentType())) {
+                // init the check point
+                Boolean isDeadEnd = true;
+
+                // init and casting event context to Position[] type
+                Position[] positions = (Position[]) event.getEventContext();
+
+                // check and modify the check dead end
+                for (int i = 0; i < positions.length; i++) {
+                    if (!positions[i].isEmpty()){
+                        if (!positions[i].peekToken().getOwner().getUid().equals(getUid())){
+                            for (Integer integer : validMovesMap.get(i)) {
+                                if (positions[integer].isEmpty()){
+                                    isDeadEnd = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (isDeadEnd == false){
+                        break;
+                    }
+                }
+
+                // check is deadEnd
+                // Set the player's state to FAILED
+                setState(PlayerStateEnum.FAILED);
+
+                // create FAILED event
+                Event<PlayerModelImpl> failedEvent = new FailedEvent<>();
+                event.setEventSource(this);
+                event.setEventContext(this);
+                notifyListeners(failedEvent);
+
+            }
+
         }
     }
 
@@ -333,4 +382,50 @@ public class PlayerModelImpl implements PlayerModel, EventListener, EventSource 
     public void clearListeners() {
         listeners = new ArrayList<>();
     }
+
+
+    /**
+     * using resource bundle to read ValidMove.properties file
+     * to initialize the validMovesMap
+     */
+    private void initValidMovesMap() {
+        // load resource file
+        ResourceBundle resourceBundleBundle = ResourceBundle.getBundle("ValidMove");
+
+        // read the number of lines
+        int numberOfPositions = Integer.parseInt(resourceBundleBundle.getString("numberOfPositions"));
+
+        // instanceof coordinatePositionMapping
+        this.validMovesMap = new HashMap<>();
+
+        // assign value
+        for (int position = 0; position < numberOfPositions; position++) {
+            // create search key
+            String key = String.valueOf(position);
+            if (resourceBundleBundle.containsKey(key)) {
+                // according to the key to get the coordinate string
+                String moves = resourceBundleBundle.getString(key);
+
+                // using split function to get x and y string
+                String[] moveArray = moves.split(",");
+
+                // create neighbor
+                Set<Integer> moveSet = new HashSet<>();
+
+                for (String move : moveArray) {
+                    // parse the String to Int
+                    int location = Integer.parseInt(move.trim());
+                    moveSet.add(location);
+                }
+
+                // assign value
+                validMovesMap.put(position, moveSet);
+            }
+        }
+    }
+
+
+
 }
+
+
