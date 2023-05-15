@@ -44,6 +44,7 @@ public class Application {
     /**
      * Initialize the classes that the entire game needs to use by assembling.
      * And inject some objects as dependencies into other objects.
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -61,7 +62,7 @@ public class Application {
             display.displayMessage("  Your selection: ");
             try {
                 selection = scanner.nextInt();
-                switch (selection){
+                switch (selection) {
                     case 1:
                         newGame(); // game start
                         break;
@@ -72,10 +73,10 @@ public class Application {
                         display.displayMessage("  See you next time!"); // print exit message
                         break;
                     default:
-                        display.displayMessage("  Invalid selection. Please try again."+ display.getNewLine());
+                        display.displayMessage("  Invalid selection. Please try again." + display.getNewLine());
                         break;
                 }
-            } catch (InputMismatchException e){
+            } catch (InputMismatchException e) {
                 display.displayMessage("  Invalid input. Please enter a valid integer." + display.getNewLine());
                 scanner.nextLine(); // clean cache
                 selection = 0; // continue loop
@@ -87,15 +88,15 @@ public class Application {
     /**
      * assemble a new game
      */
-    public static void newGame(){
+    public static void newGame() {
         // init the BoardModel
         BoardModel boardModel = new BoardModelImpl();
         Trigger trigger = new BoardMillTriggerImpl();
 
-        ((BoardModelImpl)boardModel).addListener(trigger);
+        ((BoardModelImpl) boardModel).addListener(trigger);
 
         // init board
-        Board board = new BoardImpl(boardModel,trigger);
+        Board board = new BoardImpl(boardModel, trigger);
 
         // init the player-1 Model
         PlayerModel playerModel1 = new PlayerModelImpl("Player-1");
@@ -104,7 +105,7 @@ public class Application {
         // init the 9 tokens for player-1
         Token[] tokens1 = new Token[9];
         for (int i = 0; i < tokens1.length; i++) {
-            tokens1[i] = new TokenImpl(player1,'○');
+            tokens1[i] = new TokenImpl(player1, '○');
 
         }
         // injection token into player-1 model
@@ -119,7 +120,7 @@ public class Application {
         // init the 9 tokens for player-2
         Token[] tokens2 = new Token[9];
         for (int i = 0; i < tokens2.length; i++) {
-            tokens2[i] = new TokenImpl(player2,'●');
+            tokens2[i] = new TokenImpl(player2, '●');
 
         }
         // injection token into player-2 model
@@ -127,6 +128,9 @@ public class Application {
         // add the player-2 model to the event listener list of the BoardModel
         ((EventSource) board).addListener((EventListener) playerModel2);
 
+        // boardModel add listener
+        ((BoardModelImpl) boardModel).addListener((EventListener) playerModel1);
+        ((BoardModelImpl) boardModel).addListener((EventListener) playerModel2);
 
         // init Turn
         Turn turn = new TurnImpl();
@@ -136,13 +140,13 @@ public class Application {
 
         // init Game State
         GameState gameState = new GameStateImpl();
-        ((EventSource)playerModel1).addListener(gameState);
-        ((EventSource)playerModel2).addListener(gameState);
+        ((EventSource) playerModel1).addListener(gameState);
+        ((EventSource) playerModel2).addListener(gameState);
 
         // init Game model
         GameModel gameModel = new GameModelImpl(gameState);
         // set players, turn and board into game model
-        gameModel.setPlayers(player1,player2);
+        gameModel.setPlayers(player1, player2);
         gameModel.setTurn(turn);
         gameModel.setBoard(board);
 
@@ -158,7 +162,7 @@ public class Application {
     /**
      * Print the game rule (Word only)
      */
-    public static void showRule(){
+    public static void showRule() {
         Display display = new Display();
         View showRuleWordOnly = new ShowRuleViewFactory().createView();
         showRuleWordOnly.draw(display);
