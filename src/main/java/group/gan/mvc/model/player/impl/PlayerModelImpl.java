@@ -288,17 +288,21 @@ public class PlayerModelImpl implements PlayerModel, EventListener, EventSource 
         }else if (type == EventType.BOARD_CHANGE) {
 
             if (event.getEventContext().getClass().isArray()
-                    && Position.class.isAssignableFrom(event.getEventContext().getClass().getComponentType())) {
+                    && Position.class.isAssignableFrom(event.getEventContext().getClass().getComponentType())
+                    && getState() != PlayerStateEnum.FLYING) {
                 // init the check point
                 Boolean isDeadEnd = true;
 
                 // init and casting event context to Position[] type
                 Position[] positions = (Position[]) event.getEventContext();
 
+                // using a counter to avoid the non-token end point
+                int counter = 0;
                 // check and modify the check dead end
                 for (int i = 0; i < positions.length; i++) {
                     if (!positions[i].isEmpty()){
-                        if (!positions[i].peekToken().getOwner().getUid().equals(getUid())){
+                        if (positions[i].peekToken().getOwner().getUid().equals(getUid())){
+                            counter += 1;
                             for (Integer integer : validMovesMap.get(i)) {
                                 if (positions[integer].isEmpty()){
                                     isDeadEnd = false;
@@ -312,15 +316,23 @@ public class PlayerModelImpl implements PlayerModel, EventListener, EventSource 
                     }
                 }
 
-                // check is deadEnd
-                // Set the player's state to FAILED
-                setState(PlayerStateEnum.FAILED);
+                if (counter == 0){
+                    isDeadEnd = false;
+                }
 
-                // create FAILED event
-                Event<PlayerModelImpl> failedEvent = new FailedEvent<>();
-                event.setEventSource(this);
-                event.setEventContext(this);
-                notifyListeners(failedEvent);
+
+                // check is deadEnd
+                if (isDeadEnd){
+                    // Set the player's state to FAILED
+                    setState(PlayerStateEnum.FAILED);
+
+                    // create FAILED event
+                    Event<PlayerModelImpl> failedEvent = new FailedEvent<>();
+                    event.setEventSource(this);
+                    event.setEventContext(this);
+                    notifyListeners(failedEvent);
+                }
+
 
             }
 
