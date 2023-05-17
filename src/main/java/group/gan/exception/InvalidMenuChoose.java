@@ -9,7 +9,7 @@ package group.gan.exception;
  */
 public class InvalidMenuChoose extends Exception{
 
-    String msg;
+    private String msg;
 
     public InvalidMenuChoose(String msg){
         super(msg);
