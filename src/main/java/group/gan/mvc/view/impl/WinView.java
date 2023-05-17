@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
  */
 public class WinView implements View {
 
-    Pollable winner;
+    private Pollable winner;
 
     public WinView(Pollable winner){
         this.winner =  winner;

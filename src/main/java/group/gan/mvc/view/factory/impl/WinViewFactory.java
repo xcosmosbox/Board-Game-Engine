@@ -15,7 +15,7 @@ import group.gan.mvc.view.impl.WinView;
  */
 public class WinViewFactory implements ViewFactory {
 
-    Pollable winner;
+    private Pollable winner;
 
     public WinViewFactory(Player player){
         winner = (Pollable) player;
