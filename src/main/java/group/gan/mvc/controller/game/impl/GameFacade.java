@@ -91,7 +91,7 @@ public class GameFacade implements Game, EventListener {
 
                 //tell turn to ask for a command from player to remove a token on the board.
                 Command playerNextCommand = gameModel.getTurn().continueRun();
-                playerNextCommand.init(gameModel.getBoard(), (Player) gameModel.getTurn().getPollableInstance());
+                playerNextCommand.init(this, gameModel.getBoard());
                 boolean isValidCommand = playerNextCommand.execute();
                 while (!isValidCommand) {
                     MillCommandFactory millCommandFactory = new MillCommandFactory();
