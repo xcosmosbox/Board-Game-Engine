@@ -296,43 +296,59 @@ public class PlayerModelImpl implements PlayerModel, EventListener, EventSource 
                 // init and casting event context to Position[] type
                 Position[] positions = (Position[]) event.getEventContext();
 
-                // using a counter to avoid the non-token end point
-                int counter = 0;
-                // check and modify the check dead end
-                for (int i = 0; i < positions.length; i++) {
-                    if (!positions[i].isEmpty()){
-                        if (positions[i].peekToken().getOwner().getUid().equals(getUid())){
-                            counter += 1;
-                            for (Integer integer : validMovesMap.get(i)) {
-                                if (positions[integer].isEmpty()){
-                                    isDeadEnd = false;
-                                    break;
+                // check all own tokens set in board
+                int allTokensNum = 0;
+                for (Token token : tokens) {
+                    if (token.getOwner() != null){
+                        allTokensNum += 1;
+                    }
+                }
+                for (Position position : positions) {
+                    if (!position.isEmpty()){
+                        if(position.peekToken().getOwner().getUid().equals(getUid())){
+                            allTokensNum -= 1;
+                        }
+                    }
+                }
+
+                if (allTokensNum == 0){
+                    // using a counter to avoid the non-token end point
+                    int counter = 0;
+                    // check and modify the check dead end
+                    for (int i = 0; i < positions.length; i++) {
+                        if (!positions[i].isEmpty()){
+                            if (positions[i].peekToken().getOwner().getUid().equals(getUid())){
+                                counter += 1;
+                                for (Integer integer : validMovesMap.get(i)) {
+                                    if (positions[integer].isEmpty()){
+                                        isDeadEnd = false;
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        if (isDeadEnd == false){
+                            break;
+                        }
                     }
-                    if (isDeadEnd == false){
-                        break;
+
+                    if (counter == 0){
+                        isDeadEnd = false;
+                    }
+
+
+                    // check is deadEnd
+                    if (isDeadEnd){
+                        // Set the player's state to FAILED
+                        setState(PlayerStateEnum.FAILED);
+
+                        // create FAILED event
+                        Event<PlayerModelImpl> failedEvent = new FailedEvent<>();
+                        event.setEventSource(this);
+                        event.setEventContext(this);
+                        notifyListeners(failedEvent);
                     }
                 }
-
-                if (counter == 0){
-                    isDeadEnd = false;
-                }
-
-
-                // check is deadEnd
-                if (isDeadEnd){
-                    // Set the player's state to FAILED
-                    setState(PlayerStateEnum.FAILED);
-
-                    // create FAILED event
-                    Event<PlayerModelImpl> failedEvent = new FailedEvent<>();
-                    event.setEventSource(this);
-                    event.setEventContext(this);
-                    notifyListeners(failedEvent);
-                }
-
 
             }
 
