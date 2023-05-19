@@ -8,7 +8,8 @@ Team members: Yuxiang Feng, Yifan Wang, Tianyi Liu
 
 ## Sprint3 Note
 
-- For the execution method of the Executable file, please refer to "6. Executable Instruction" in "CL_Monday6pm_Team7_text-based.pdf" or run the Application.java directly
+- The compiled executable files are in the **Target** folder. Please run the jar package named "FIT3077_Game-1.0-SNAPSHOT-jar-with-dependencies". For specific operation instructions, please follow the "6. Executable Instruction" steps in "CL_Monday6pm_Team7_text-based.pdf".
+- Or run the Application.java directly
 - please use the links below to view: https://youtu.be/LlszET_OpPE
 - The screenshot zip file contains screenshots of the five situations involved in the demo video
 
