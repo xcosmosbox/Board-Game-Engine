@@ -289,7 +289,7 @@ public class PlayerModelImpl implements PlayerModel, EventListener, EventSource 
 
             if (event.getEventContext().getClass().isArray()
                     && Position.class.isAssignableFrom(event.getEventContext().getClass().getComponentType())
-                    && getState() != PlayerStateEnum.FLYING) {
+                    && getState() == PlayerStateEnum.MOVING) {
                 // init the check point
                 Boolean isDeadEnd = true;
 
