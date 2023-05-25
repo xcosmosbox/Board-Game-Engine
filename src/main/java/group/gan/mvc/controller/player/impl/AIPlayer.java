@@ -9,6 +9,8 @@ import group.gan.mvc.model.player.PlayerStateEnum;
 import group.gan.mvc.model.token.Token;
 import group.gan.mvc.view.View;
 
+import java.util.Objects;
+
 /**
  * @author: fengyuxiang
  * @ClassName: AIPlayer
@@ -28,6 +30,7 @@ public class AIPlayer implements Player, Pollable {
 
     /**
      * play the game
+     * just add this for the further use
      *
      * @return
      */
@@ -38,12 +41,13 @@ public class AIPlayer implements Player, Pollable {
 
     /**
      * set the state manager
-     *
+     * Injection interface for setting PlayerModel
      * @param playerModel
      */
     @Override
     public void setStateManager(PlayerModel playerModel) {
-
+        // an injection interface for player model
+        this.playerModel = playerModel;
     }
 
     /**
@@ -53,7 +57,7 @@ public class AIPlayer implements Player, Pollable {
      */
     @Override
     public Integer getUid() {
-        return null;
+        return playerModel.getUid();
     }
 
     /**
@@ -63,7 +67,7 @@ public class AIPlayer implements Player, Pollable {
      */
     @Override
     public Token getOneToken() {
-        return null;
+        return playerModel.getOneToken();
     }
 
     /**
@@ -73,7 +77,7 @@ public class AIPlayer implements Player, Pollable {
      */
     @Override
     public String getPlayerName() {
-        return null;
+        return playerModel.getPlayerName();
     }
 
     /**
@@ -83,7 +87,7 @@ public class AIPlayer implements Player, Pollable {
      */
     @Override
     public PlayerStateEnum getPlayerState() {
-        return null;
+        return playerModel.getState();
     }
 
     /**
@@ -126,5 +130,38 @@ public class AIPlayer implements Player, Pollable {
     @Override
     public Command fillCommand(Command command) {
         return null;
+    }
+
+    /** Override the equals method for comparing PlayerImpl objects
+     * @param o
+     * @return true if the two objects are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AIPlayer aiPlayer = (AIPlayer) o;
+        return Objects.equals(playerModel, aiPlayer.playerModel);
+    }
+
+    /** Override the hashCode method for PlayerImpl objects
+     * @return the hash code of the player
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(playerModel);
+    }
+
+    /** Override the toString method for the PlayerImpl class
+     * @return a string representation of the player
+     */
+    @Override
+    public String toString() {
+        // Get all tokens of the player
+        Token[] allTokens = playerModel.getTokens();
+        // Get the symbol of the first token
+        String symbol = String.valueOf(allTokens[0].getSymbol());
+        // Return a string representation of the player with their name and token color
+        return getPlayerName() + " / Token Color: " + symbol;
     }
 }
