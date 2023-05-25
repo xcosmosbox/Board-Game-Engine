@@ -17,6 +17,10 @@ import group.gan.mvc.view.View;
  * @create: 25/5/2023
  */
 public class AIPlayer implements Player, Pollable {
+
+    // Declare a PlayerModel instance
+    private PlayerModel playerModel;
+
     /**
      * play the game
      *
