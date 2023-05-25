@@ -21,6 +21,11 @@ public class AIPlayer implements Player, Pollable {
     // Declare a PlayerModel instance
     private PlayerModel playerModel;
 
+    public AIPlayer(PlayerModel playerModel){
+        // Assign the provided playerModel to the class variable
+        this.playerModel = playerModel;
+    }
+
     /**
      * play the game
      *
