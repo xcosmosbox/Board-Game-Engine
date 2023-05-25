@@ -1,0 +1,250 @@
+package group.gan.mvc.controller.player.impl;
+
+import group.gan.exception.InvalidMenuChoose;
+import group.gan.mvc.controller.command.Command;
+import group.gan.mvc.controller.command.CommandType;
+import group.gan.mvc.controller.command.impl.MillCommand;
+import group.gan.mvc.controller.command.impl.MoveCommand;
+import group.gan.mvc.controller.move.MoveStrategy;
+import group.gan.mvc.controller.move.factory.MoveStrategyFactory;
+import group.gan.mvc.controller.move.factory.impl.FlyingStrategyFactory;
+import group.gan.mvc.controller.move.factory.impl.MillStrategyFactory;
+import group.gan.mvc.controller.move.factory.impl.MovingStrategyFactory;
+import group.gan.mvc.controller.move.factory.impl.PlacingStrategyFactory;
+import group.gan.mvc.controller.player.Player;
+import group.gan.mvc.controller.turn.Pollable;
+import group.gan.mvc.model.player.AIPlayerModel;
+import group.gan.mvc.model.player.PlayerModel;
+import group.gan.mvc.model.player.PlayerStateEnum;
+import group.gan.mvc.model.token.Token;
+import group.gan.mvc.view.View;
+import group.gan.utils.CommandTypeConverter;
+import group.gan.utils.Display;
+
+import java.util.Objects;
+
+/**
+ * @author: fengyuxiang
+ * @ClassName: AIPlayer
+ * @version: 1.0
+ * @description:
+ * @create: 25/5/2023
+ */
+public class AIPlayerImpl implements Player, Pollable {
+
+    // Declare a PlayerModel instance
+    private AIPlayerModel playerModel;
+
+    // private variable to help the requestIntegersInput function to check the return value
+    private InitDescribeType initDescribeType;
+
+    public AIPlayerImpl(AIPlayerModel playerModel){
+        // Assign the provided playerModel to the class variable
+        this.playerModel = playerModel;
+    }
+
+    /**
+     * play the game
+     * just add this for the further use
+     *
+     * @return
+     */
+    @Override
+    public Command play() {
+        return null;
+    }
+
+    /**
+     * set the state manager
+     * Injection interface for setting PlayerModel
+     * @param playerModel
+     */
+    @Override
+    public void setStateManager(PlayerModel playerModel) {
+        // an injection interface for player model
+        this.playerModel = (AIPlayerModel) playerModel;
+    }
+
+    /**
+     * get the uid of the player
+     *
+     * @return
+     */
+    @Override
+    public Integer getUid() {
+        return playerModel.getUid();
+    }
+
+    /**
+     * get one token
+     *
+     * @return
+     */
+    @Override
+    public Token getOneToken() {
+        return playerModel.getOneToken();
+    }
+
+    /**
+     * get the player name
+     *
+     * @return
+     */
+    @Override
+    public String getPlayerName() {
+        return playerModel.getPlayerName();
+    }
+
+    /**
+     * get player state
+     *
+     * @return
+     */
+    @Override
+    public PlayerStateEnum getPlayerState() {
+        return playerModel.getState();
+    }
+
+    /**
+     * The player returns a number according to the prompt
+     * For AI player, it plays the game anyway, it doesn't exit the game
+     * @return
+     */
+    @Override
+    public Integer requestOneIntegerInput() {
+        try {
+            Thread.sleep(800);
+            System.out.print(1);
+            Thread.sleep(400);
+            System.out.println();
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return 1;
+    }
+
+    /**
+     * The player returns a list numbers according to the prompt
+     *
+     * @return
+     */
+    @Override
+    public Integer[] requestIntegersInput() {
+        return new Integer[0];
+    }
+
+    /**
+     * get the command type from the view
+     *
+     * @param view
+     * @return
+     */
+    @Override
+    public CommandType poll(View view) {
+        // get the text message that will be displayed
+        Display display = new Display();
+        view.draw(display);
+        CommandType commandType = null;
+
+        while (commandType == null){
+            // get the user input
+            // for AI player, it plays the game anyway, it doesn't exit the game
+            int input = requestOneIntegerInput();
+
+            try {
+                commandType = CommandTypeConverter.IntegerToCommandType(input, view);
+            } catch (InvalidMenuChoose e) {
+                System.out.println(e);
+            }
+        }
+
+
+        return commandType;
+    }
+
+    /**
+     * fill the command with the command type
+     *
+     * @param command
+     * @return
+     */
+    @Override
+    public Command fillCommand(Command command) {
+        // If the command is of type MOVE
+        if (command.getCommandType() == CommandType.MOVE) {
+
+//            MoveCommand moveCommand = (MoveCommand) command;
+//            moveCommand.init(this);
+
+            // Cast the command to MoveCommand and initialize it with the player
+            ((MoveCommand) command).init(this);
+            MoveStrategyFactory moveStrategyFactory = null;
+
+            // Create a move strategy depending on the player's current state
+            if (this.playerModel.getState() == PlayerStateEnum.PLACING){
+                initDescribeType = InitDescribeType.PLACING;
+                moveStrategyFactory = new PlacingStrategyFactory();
+//                moveCommand.initMoveStrategy(moveStrategyFactory.createStrategy());
+
+            } else if (this.playerModel.getState() == PlayerStateEnum.MOVING) {
+                initDescribeType = InitDescribeType.MOVING;
+                moveStrategyFactory = new MovingStrategyFactory();
+//                moveCommand.initMoveStrategy(moveStrategyFactory.createStrategy());
+            } else if (this.playerModel.getState() == PlayerStateEnum.FLYING) {
+                initDescribeType = InitDescribeType.FLYING;
+                moveStrategyFactory = new FlyingStrategyFactory();
+            }
+
+            if (moveStrategyFactory != null){
+                MoveStrategy moveStrategy = moveStrategyFactory.createStrategy();
+                moveStrategy.initDescription(this);
+                ((MoveCommand) command).initMoveStrategy(moveStrategy);
+            }
+
+        }else if (command.getCommandType() == CommandType.MILL) {
+            initDescribeType = InitDescribeType.MILLING;
+            // Cast the command to MillCommand and initialize it with the player
+            ((MillCommand) command).init(this);
+            MoveStrategy moveStrategy = new MillStrategyFactory().createStrategy();
+            moveStrategy.initDescription(this);
+            command.initMoveStrategy(moveStrategy);
+        }
+
+        return command;
+    }
+
+    /** Override the equals method for comparing PlayerImpl objects
+     * @param o
+     * @return true if the two objects are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AIPlayerImpl aiPlayerImpl = (AIPlayerImpl) o;
+        return Objects.equals(playerModel, aiPlayerImpl.playerModel);
+    }
+
+    /** Override the hashCode method for PlayerImpl objects
+     * @return the hash code of the player
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(playerModel);
+    }
+
+    /** Override the toString method for the PlayerImpl class
+     * @return a string representation of the player
+     */
+    @Override
+    public String toString() {
+        // Get all tokens of the player
+        Token[] allTokens = playerModel.getTokens();
+        // Get the symbol of the first token
+        String symbol = String.valueOf(allTokens[0].getSymbol());
+        // Return a string representation of the player with their name and token color
+        return getPlayerName() + " / Token Color: " + symbol;
+    }
+}
