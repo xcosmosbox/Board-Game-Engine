@@ -88,7 +88,7 @@ public class Application {
                 selection = 0; // continue loop
             }
 
-        } while (selection != 3);
+        } while (selection != 4);
     }
 
     /**
