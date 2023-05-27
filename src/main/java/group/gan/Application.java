@@ -7,6 +7,7 @@ import group.gan.mvc.controller.board.impl.BoardImpl;
 import group.gan.mvc.controller.game.Game;
 import group.gan.mvc.controller.game.impl.GameFacade;
 import group.gan.mvc.controller.player.Player;
+import group.gan.mvc.controller.player.impl.AIPlayerImpl;
 import group.gan.mvc.controller.player.impl.PlayerImpl;
 import group.gan.mvc.controller.turn.Pollable;
 import group.gan.mvc.controller.turn.Turn;
@@ -19,7 +20,9 @@ import group.gan.mvc.model.game.GameModel;
 import group.gan.mvc.model.game.impl.GameModelImpl;
 import group.gan.mvc.model.game.state.GameState;
 import group.gan.mvc.model.game.state.impl.GameStateImpl;
+import group.gan.mvc.model.player.AIPlayerModel;
 import group.gan.mvc.model.player.PlayerModel;
+import group.gan.mvc.model.player.impl.AIModelImpl;
 import group.gan.mvc.model.player.impl.PlayerModelImpl;
 import group.gan.mvc.model.token.Token;
 import group.gan.mvc.model.token.impl.TokenImpl;
@@ -157,6 +160,13 @@ public class Application {
         trigger.addListener((EventListener) game);
         // start game
         game.run();
+    }
+
+    /**
+     * assemble a new game with AI
+     */
+    public static void newGameWithAI() {
+
     }
 
     /**
