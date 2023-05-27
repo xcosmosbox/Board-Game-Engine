@@ -70,9 +70,12 @@ public class Application {
                         newGameWithHuman(); // game start
                         break;
                     case 2:
-                        showRule(); // show rule (Word Only)
+                        newGameWithAI();
                         break;
                     case 3:
+                        showRule(); // show rule (Word Only)
+                        break;
+                    case 4:
                         display.displayMessage("  See you next time!"); // print exit message
                         break;
                     default:
