@@ -166,7 +166,74 @@ public class Application {
      * assemble a new game with AI
      */
     public static void newGameWithAI() {
+        // init the BoardModel
+        BoardModel boardModel = new BoardModelImpl();
+        Trigger trigger = new BoardMillTriggerImpl();
 
+        ((BoardModelImpl) boardModel).addListener(trigger);
+
+        // init board
+        Board board = new BoardImpl(boardModel, trigger);
+
+        // init the player-1 Model
+        PlayerModel playerModel1 = new PlayerModelImpl("Player-1");
+        // init the player-1 Controller
+        Player player1 = new PlayerImpl(playerModel1);
+        // init the 9 tokens for player-1
+        Token[] tokens1 = new Token[9];
+        for (int i = 0; i < tokens1.length; i++) {
+            tokens1[i] = new TokenImpl(player1, '○');
+
+        }
+        // injection token into player-1 model
+        playerModel1.setTokens(tokens1);
+        // add the player-1 model to the event listener list of the BoardModel
+        ((EventSource) board).addListener((EventListener) playerModel1);
+
+        // init the player-2 mode
+        AIPlayerModel playerModel2 = new AIModelImpl("AI-Player", trigger);
+        // init the player-2 Controller
+        Player player2 = new AIPlayerImpl(playerModel2);
+        // init the 9 tokens for player-2
+        Token[] tokens2 = new Token[9];
+        for (int i = 0; i < tokens2.length; i++) {
+            tokens2[i] = new TokenImpl(player2, '●');
+
+        }
+        // injection token into player-2 model
+        playerModel2.setTokens(tokens2);
+        // add the player-2 model to the event listener list of the BoardModel
+        ((EventSource) board).addListener((EventListener) playerModel2);
+
+        // boardModel add listener
+        ((BoardModelImpl) boardModel).addListener((EventListener) playerModel1);
+        ((BoardModelImpl) boardModel).addListener((EventListener) playerModel2);
+
+        // init Turn
+        Turn turn = new TurnImpl();
+        // add the player 1 & 2 into the pollable list
+        turn.registerPollableObject((Pollable) player1);
+        turn.registerPollableObject((Pollable) player2);
+
+        // init Game State
+        GameState gameState = new GameStateImpl();
+        ((EventSource) playerModel1).addListener(gameState);
+        ((EventSource) playerModel2).addListener(gameState);
+
+        // init Game model
+        GameModel gameModel = new GameModelImpl(gameState);
+        // set players, turn and board into game model
+        gameModel.setPlayers(player1, player2);
+        gameModel.setTurn(turn);
+        gameModel.setBoard(board);
+
+        // init Game Facade
+        Game game = new GameFacade();
+        // inject GameModel into Game Facade
+        game.build(gameModel);
+        trigger.addListener((EventListener) game);
+        // start game
+        game.run();
     }
 
     /**
