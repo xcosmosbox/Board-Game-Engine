@@ -6,6 +6,7 @@ import group.gan.events.impl.FailedEvent;
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.model.board.trigger.Trigger;
 import group.gan.mvc.model.coordinate.Coordinate;
+import group.gan.mvc.model.coordinate.impl.CoordinateImpl;
 import group.gan.mvc.model.player.AIPlayerModel;
 import group.gan.mvc.model.player.PlayerStateEnum;
 import group.gan.mvc.model.position.Position;
@@ -87,6 +88,8 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
         this.playerUid = PlayerModelImpl.uid;
         this.state = PlayerStateEnum.PLACING;
         this.initValidMovesMap();
+        this.initPositionCoordinateMapping();
+        this.initTriggerNodeMap();
         PlayerModelImpl.uid++;
     }
 
@@ -506,6 +509,84 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
 
                 // assign value
                 validMovesMap.put(position, moveSet);
+            }
+        }
+    }
+
+    /**
+     * using resource bundle to read CoordinatePositionMap.properties file
+     * to initialize the coordinatePositionMapping
+     */
+    private void initPositionCoordinateMapping() {
+        // load resource file
+        ResourceBundle resourceBundleBundle = ResourceBundle.getBundle("CoordinatePositionMap");
+
+        // read the number of lines
+        int numberOfPositions = Integer.parseInt(resourceBundleBundle.getString("numberOfPositions"));
+
+        // instanceof coordinatePositionMapping
+        this.positionCoordinateMapping = new HashMap<>();
+
+        // assign value
+        for (int position = 0; position < numberOfPositions; position++) {
+            // create search key
+            String key = String.valueOf(position);
+            if (resourceBundleBundle.containsKey(key)) {
+                // according to the key to get the coordinate string
+                String moves = resourceBundleBundle.getString(key);
+
+                // using split function to get x and y string
+                String[] coordinateArray = moves.split(",");
+
+                // parse the String to Int
+                int x = Integer.parseInt(coordinateArray[0].trim());
+                int y = Integer.parseInt(coordinateArray[1].trim());
+
+                Coordinate coordinate = new CoordinateImpl(x, y);
+
+                // assign value
+                this.positionCoordinateMapping.put(position, coordinate);
+            }
+        }
+    }
+
+    /**
+     * using resource bundle to read MillTriggerConfig.properties file
+     * to initialize the validMovesMap
+     */
+    private void initTriggerNodeMap() {
+        // load resource file
+        ResourceBundle MillTriggerConfigBundle = ResourceBundle.getBundle("MillTriggerConfig");
+
+        // read the number of positions
+        int numberOfPositions = Integer.parseInt(MillTriggerConfigBundle.getString("numberOfPositions"));
+
+        //initialising triggerNodeMap
+        triggerNodeMap=new HashMap<>();
+        // init the key for triggerNodeMap
+        for (int i = 0; i < numberOfPositions; i++) {
+            triggerNodeMap.put(i,new ArrayList<>());
+        }
+
+        // read the number of lines
+        int lines = Integer.parseInt(MillTriggerConfigBundle.getString("lines"));
+
+        // assign value
+        for (int line = 0; line < lines; line++) {
+            // create search key
+            String key = String.valueOf(line);
+            if (MillTriggerConfigBundle.containsKey(key)){
+                // according to the key to get the mill position
+                String millStr = MillTriggerConfigBundle.getString(key);
+
+                // using split function to get the three position index
+                String[] millArray = millStr.split(",");
+
+                // init the value list for triggerNodeMap
+                for (String millIndex : millArray) {
+                    Integer index = Integer.parseInt(millIndex.trim());
+                    triggerNodeMap.get(index).add(line);
+                }
             }
         }
     }
