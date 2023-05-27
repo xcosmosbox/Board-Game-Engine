@@ -4,6 +4,7 @@ import group.gan.events.*;
 import group.gan.events.EventListener;
 import group.gan.events.impl.FailedEvent;
 import group.gan.mvc.controller.command.Command;
+import group.gan.mvc.model.board.trigger.Trigger;
 import group.gan.mvc.model.coordinate.Coordinate;
 import group.gan.mvc.model.player.AIPlayerModel;
 import group.gan.mvc.model.player.PlayerStateEnum;
@@ -16,7 +17,7 @@ import java.util.*;
 /**
  * @author: fengyuxiang
  * @ClassName: AIModelImpl
- * @version: 1.0
+ * @version: 1.1
  * @description:
  * @create: 25/5/2023
  */
@@ -27,7 +28,7 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
     private String playerName;
     // Instantiate the player states enum
     private PlayerStateEnum state;
-//    // Initialize the player uid
+    //    // Initialize the player uid
 //    public static Integer uid = 0;
     // Initialize the player uid
     private Integer playerUid;
@@ -55,14 +56,34 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
     private Map<Integer, Set<Integer>> validMovesMap;
 
     /**
+     *
+     */
+    private Map<Integer, Coordinate> positionCoordinateMapping;
+
+    /**
+     * Has a trigger that stores the state of the mill on the board.
+     * Since the data stored in the trigger is different from that of the BoardModel,
+     * different objects are used for encapsulation to separate concerns.
+     */
+    private Trigger trigger;
+
+    /**
+     * using map to store all trigger node dictionary
+     * for example, position 0 will affect trigger 1 & 0
+     * Map<0,List<0,1>>
+     */
+    private Map<Integer, List<Integer>> triggerNodeMap;
+
+    /**
      * Since this class completes the event monitoring,
      * we need to store a cache so that the AI can plan its own chess strategy on the latest board.
      */
     private Position[] positionsCache;
 
 
-    public AIModelImpl(String playerName){
+    public AIModelImpl(String playerName, Trigger trigger){
         this.playerName = playerName;
+        this.trigger = trigger;
         this.playerUid = PlayerModelImpl.uid;
         this.state = PlayerStateEnum.PLACING;
         this.initValidMovesMap();
@@ -483,7 +504,7 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
 
     @Override
     public Position[] getPositionsCache() {
-        return new Position[0];
+        return positionsCache;
     }
 
     @Override
