@@ -598,7 +598,15 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
 
     @Override
     public List<Coordinate> getPlaceableOptions() {
-        return null;
+        List<Coordinate> options = new ArrayList<>();
+
+        for (int i = 0; i < this.getPositionsCache().length; i++) {
+            if (positionsCache[i].isEmpty()){
+                options.add(positionCoordinateMapping.get(i));
+            }
+        }
+
+        return options;
     }
 
     @Override
