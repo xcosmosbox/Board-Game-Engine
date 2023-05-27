@@ -611,7 +611,25 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
 
     @Override
     public List<Coordinate[]> getMovableOptions() {
-        return null;
+        List<Coordinate[]> options = new ArrayList<>();
+
+        for (int i = 0; i < this.getPositionsCache().length; i++) {
+            if (!positionsCache[i].isEmpty()){
+                if (positionsCache[i].peekToken().getOwner().getUid().equals(getUid())){
+                    for (Integer integer : validMovesMap.get(i)) {
+                        if (positionsCache[integer].isEmpty()){
+                            Coordinate[] coordinates = new Coordinate[2];
+                            coordinates[0] = positionCoordinateMapping.get(i);
+                            coordinates[1] = positionCoordinateMapping.get(integer);
+                            options.add(coordinates);
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return options;
     }
 
     @Override
