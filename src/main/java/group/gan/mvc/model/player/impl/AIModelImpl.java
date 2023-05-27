@@ -160,6 +160,14 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
                 }
             }
         }else if (type == EventType.BOARD_CHANGE) {
+            if (event.getEventContext().getClass().isArray()
+                    && Position.class.isAssignableFrom(event.getEventContext().getClass().getComponentType())) {
+                // init and casting event context to Position[] type
+                Position[] positions = (Position[]) event.getEventContext();
+
+                // store the position cache to help the AI player to decide the next step
+                positionsCache = positions;
+            }
 
             if (event.getEventContext().getClass().isArray()
                     && Position.class.isAssignableFrom(event.getEventContext().getClass().getComponentType())
