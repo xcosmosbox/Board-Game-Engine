@@ -29,8 +29,6 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
     private String playerName;
     // Instantiate the player states enum
     private PlayerStateEnum state;
-    //    // Initialize the player uid
-//    public static Integer uid = 0;
     // Initialize the player uid
     private Integer playerUid;
     // Array of tokens owned by the player
