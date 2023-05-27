@@ -657,6 +657,57 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
 
     @Override
     public List<Coordinate> getRemovableOptions() {
-        return null;
+        List<Coordinate> options = new ArrayList<>();
+
+        // check all opponent's tokens is in mill
+        Boolean isAllOthersTokenInMill = true;
+        for (int i = 0; i < this.getPositionsCache().length; i++) {
+            if (!positionsCache[i].isEmpty()){
+                if (!positionsCache[i].peekToken().getOwner().getUid().equals(getUid())){
+                    List<Integer> nodeMapSnapshot = triggerNodeMap.get(i);
+                    Integer couter = 0;
+                    for (Integer integer : nodeMapSnapshot) {
+                        if (trigger.getTriggerNodeState(integer)){
+                            couter += 1;
+                        }
+                    }
+                    if (couter == 0){
+                        isAllOthersTokenInMill = false;
+                    }
+                }
+            }
+        }
+
+        if (isAllOthersTokenInMill){
+            for (int i = 0; i < this.getPositionsCache().length; i++) {
+                if (!positionsCache[i].isEmpty()){
+                    if (!positionsCache[i].peekToken().getOwner().getUid().equals(getUid())){
+                        options.add(positionCoordinateMapping.get(i));
+                    }
+                }
+            }
+
+        } else {
+            for (int i = 0; i < this.getPositionsCache().length; i++) {
+                if (!positionsCache[i].isEmpty()){
+                    if (!positionsCache[i].peekToken().getOwner().getUid().equals(getUid())){
+                        List<Integer> nodeMapSnapshot = triggerNodeMap.get(i);
+                        Integer couter = 0;
+                        for (Integer integer : nodeMapSnapshot) {
+                            if (trigger.getTriggerNodeState(integer)){
+                                couter += 1;
+                            }
+                        }
+                        if (couter == 0){
+                            options.add(positionCoordinateMapping.get(i));
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+        return options;
     }
 }
