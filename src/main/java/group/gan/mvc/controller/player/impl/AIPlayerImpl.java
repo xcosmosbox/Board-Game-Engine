@@ -13,6 +13,7 @@ import group.gan.mvc.controller.move.factory.impl.MovingStrategyFactory;
 import group.gan.mvc.controller.move.factory.impl.PlacingStrategyFactory;
 import group.gan.mvc.controller.player.Player;
 import group.gan.mvc.controller.turn.Pollable;
+import group.gan.mvc.model.coordinate.Coordinate;
 import group.gan.mvc.model.player.AIPlayerModel;
 import group.gan.mvc.model.player.PlayerModel;
 import group.gan.mvc.model.player.PlayerStateEnum;
@@ -21,7 +22,7 @@ import group.gan.mvc.view.View;
 import group.gan.utils.CommandTypeConverter;
 import group.gan.utils.Display;
 
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author: fengyuxiang
@@ -37,6 +38,7 @@ public class AIPlayerImpl implements Player, Pollable {
 
     // private variable to help the requestIntegersInput function to check the return value
     private InitDescribeType initDescribeType;
+    private Queue<Coordinate> queue = new LinkedList<>();
 
     public AIPlayerImpl(AIPlayerModel playerModel){
         // Assign the provided playerModel to the class variable
@@ -132,7 +134,64 @@ public class AIPlayerImpl implements Player, Pollable {
      */
     @Override
     public Integer[] requestIntegersInput() {
-        return new Integer[0];
+        Integer[] option = new Integer[2];
+
+        if (queue.isEmpty()){
+            if (initDescribeType == InitDescribeType.PLACING){
+                List<Coordinate> placableOptions = this.playerModel.getPlaceableOptions();
+                queue.add(placableOptions.get(new Random().nextInt(placableOptions.size())));
+            } else if (initDescribeType == InitDescribeType.MOVING) {
+                List<Coordinate[]> movableOptions = this.playerModel.getMovableOptions();
+                Coordinate[] movePair = movableOptions.get(new Random().nextInt(movableOptions.size()));
+                queue.add(movePair[0]);
+                queue.add(movePair[1]);
+            } else if (initDescribeType == InitDescribeType.FLYING) {
+                List<Coordinate[]> flyableOptions = this.playerModel.getFlyableOptions();
+                Coordinate[] flyPair = flyableOptions.get(new Random().nextInt(flyableOptions.size()));
+                queue.add(flyPair[0]);
+                queue.add(flyPair[1]);
+            } else if (initDescribeType == InitDescribeType.MILLING) {
+                List<Coordinate> millableOptions = this.playerModel.getRemovableOptions();
+                queue.add(millableOptions.get(new Random().nextInt(millableOptions.size())));
+            }
+
+            Coordinate input = queue.poll();
+            option[0] = input.getX();
+            option[1] = input.getY();
+            try {
+                Thread.sleep(800);
+                System.out.print(input.getX());
+                Thread.sleep(300);
+                System.out.print(",");
+                Thread.sleep(300);
+                System.out.print(input.getY());
+                Thread.sleep(600);
+                System.out.println();
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+        } else {
+            Coordinate input = queue.poll();
+            option[0] = input.getX();
+            option[1] = input.getY();
+            try {
+                Thread.sleep(800);
+                System.out.print(input.getX());
+                Thread.sleep(300);
+                System.out.print(",");
+                Thread.sleep(300);
+                System.out.print(input.getY());
+                Thread.sleep(600);
+                System.out.println();
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return option;
     }
 
     /**
