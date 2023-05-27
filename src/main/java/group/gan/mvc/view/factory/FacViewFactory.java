@@ -18,7 +18,7 @@ public class FacViewFactory {
     public static ViewFactory createFactory(Pollable pollable){
         ViewFactory factory = null;
         if (pollable instanceof Player){
-            PlayerImpl player = (PlayerImpl) pollable;
+            Player player = (Player) pollable;
             switch (player.getPlayerState()){
                 case PLACING -> factory = new PlacePhaseViewFactory();
                 case MOVING -> factory = new MovePhaseViewFactory();
