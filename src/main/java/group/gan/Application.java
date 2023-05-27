@@ -64,7 +64,7 @@ public class Application {
                 selection = scanner.nextInt();
                 switch (selection) {
                     case 1:
-                        newGame(); // game start
+                        newGameWithHuman(); // game start
                         break;
                     case 2:
                         showRule(); // show rule (Word Only)
@@ -86,9 +86,9 @@ public class Application {
     }
 
     /**
-     * assemble a new game
+     * assemble a new game with human
      */
-    public static void newGame() {
+    public static void newGameWithHuman() {
         // init the BoardModel
         BoardModel boardModel = new BoardModelImpl();
         Trigger trigger = new BoardMillTriggerImpl();
