@@ -6,6 +6,8 @@ Team members: Yuxiang Feng, Yifan Wang, Tianyi Liu
 
 
 
+ALL DONE  08/06/2023
+
 ## Sprint4 Note
 
 - The advanced features we implemented are: **AI player**. (No change from Sprint1 to now)
