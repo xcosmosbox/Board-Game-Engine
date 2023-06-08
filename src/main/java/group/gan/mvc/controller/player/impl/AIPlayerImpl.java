@@ -40,7 +40,11 @@ public class AIPlayerImpl implements Player, Pollable {
     private InitDescribeType initDescribeType;
     private Queue<Coordinate> queue = new LinkedList<>();
 
-    public AIPlayerImpl(AIPlayerModel playerModel){
+    /**
+     * constructor
+     * @param playerModel
+     */
+    public AIPlayerImpl(AIPlayerModel playerModel) {
         // Assign the provided playerModel to the class variable
         this.playerModel = playerModel;
     }
@@ -59,6 +63,7 @@ public class AIPlayerImpl implements Player, Pollable {
     /**
      * set the state manager
      * Injection interface for setting PlayerModel
+     *
      * @param playerModel
      */
     @Override
@@ -110,6 +115,7 @@ public class AIPlayerImpl implements Player, Pollable {
     /**
      * The player returns a number according to the prompt
      * For AI player, it plays the game anyway, it doesn't exit the game
+     *
      * @return
      */
     @Override
@@ -136,8 +142,8 @@ public class AIPlayerImpl implements Player, Pollable {
     public Integer[] requestIntegersInput() {
         Integer[] option = new Integer[2];
 
-        if (queue.isEmpty()){
-            if (initDescribeType == InitDescribeType.PLACING){
+        if (queue.isEmpty()) {
+            if (initDescribeType == InitDescribeType.PLACING) {
                 List<Coordinate> placableOptions = this.playerModel.getPlaceableOptions();
                 queue.add(placableOptions.get(new Random().nextInt(placableOptions.size())));
             } else if (initDescribeType == InitDescribeType.MOVING) {
@@ -198,7 +204,7 @@ public class AIPlayerImpl implements Player, Pollable {
      * get the command type from the view
      *
      * @param view
-     * @return
+     * @return commandType
      */
     @Override
     public CommandType poll(View view) {
@@ -207,7 +213,7 @@ public class AIPlayerImpl implements Player, Pollable {
         view.draw(display);
         CommandType commandType = null;
 
-        while (commandType == null){
+        while (commandType == null) {
             // get the user input
             // for AI player, it plays the game anyway, it doesn't exit the game
             int input = requestOneIntegerInput();
@@ -227,7 +233,7 @@ public class AIPlayerImpl implements Player, Pollable {
      * fill the command with the command type
      *
      * @param command
-     * @return
+     * @return command
      */
     @Override
     public Command fillCommand(Command command) {
@@ -242,7 +248,7 @@ public class AIPlayerImpl implements Player, Pollable {
             MoveStrategyFactory moveStrategyFactory = null;
 
             // Create a move strategy depending on the player's current state
-            if (this.playerModel.getState() == PlayerStateEnum.PLACING){
+            if (this.playerModel.getState() == PlayerStateEnum.PLACING) {
                 initDescribeType = InitDescribeType.PLACING;
                 moveStrategyFactory = new PlacingStrategyFactory();
 //                moveCommand.initMoveStrategy(moveStrategyFactory.createStrategy());
@@ -256,13 +262,13 @@ public class AIPlayerImpl implements Player, Pollable {
                 moveStrategyFactory = new FlyingStrategyFactory();
             }
 
-            if (moveStrategyFactory != null){
+            if (moveStrategyFactory != null) {
                 MoveStrategy moveStrategy = moveStrategyFactory.createStrategy();
                 moveStrategy.initDescription(this);
                 ((MoveCommand) command).initMoveStrategy(moveStrategy);
             }
 
-        }else if (command.getCommandType() == CommandType.MILL) {
+        } else if (command.getCommandType() == CommandType.MILL) {
             initDescribeType = InitDescribeType.MILLING;
             // Cast the command to MillCommand and initialize it with the player
             ((MillCommand) command).init(this);
@@ -274,7 +280,9 @@ public class AIPlayerImpl implements Player, Pollable {
         return command;
     }
 
-    /** Override the equals method for comparing PlayerImpl objects
+    /**
+     * Override the equals method for comparing PlayerImpl objects
+     *
      * @param o
      * @return true if the two objects are equal, false otherwise
      */
@@ -286,7 +294,9 @@ public class AIPlayerImpl implements Player, Pollable {
         return Objects.equals(playerModel, aiPlayerImpl.playerModel);
     }
 
-    /** Override the hashCode method for PlayerImpl objects
+    /**
+     * Override the hashCode method for PlayerImpl objects
+     *
      * @return the hash code of the player
      */
     @Override
@@ -294,7 +304,9 @@ public class AIPlayerImpl implements Player, Pollable {
         return Objects.hash(playerModel);
     }
 
-    /** Override the toString method for the PlayerImpl class
+    /**
+     * Override the toString method for the PlayerImpl class
+     *
      * @return a string representation of the player
      */
     @Override

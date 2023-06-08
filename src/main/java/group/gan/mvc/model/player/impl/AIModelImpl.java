@@ -1,7 +1,7 @@
 package group.gan.mvc.model.player.impl;
 
-import group.gan.events.*;
 import group.gan.events.EventListener;
+import group.gan.events.*;
 import group.gan.events.impl.FailedEvent;
 import group.gan.mvc.controller.command.Command;
 import group.gan.mvc.model.board.trigger.Trigger;
@@ -18,8 +18,9 @@ import java.util.*;
 /**
  * @author: fengyuxiang
  * @ClassName: AIModelImpl
- * @version: 1.1
+ * @version: 2.0
  * @description:
+ * @modified: Tianyi Liu
  * @create: 25/5/2023
  */
 public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
@@ -41,7 +42,7 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
     // Define the number of milled tokens required to enable flying state
     private int flyCondition = 6;
     // Define the number of milled tokens required to reach the losing state
-    private int loseCondition= 7;
+    private int loseCondition = 7;
     // Define the listener type for this class
     private ListenerType listenerType = ListenerType.PLAYER;
 
@@ -79,8 +80,13 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
      */
     private Position[] positionsCache;
 
-
-    public AIModelImpl(String playerName, Trigger trigger){
+    /**
+     * Constructor
+     *
+     * @param playerName
+     * @param trigger
+     */
+    public AIModelImpl(String playerName, Trigger trigger) {
         this.playerName = playerName;
         this.trigger = trigger;
         this.playerUid = PlayerModelImpl.uid;
@@ -120,7 +126,7 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
                             setState(PlayerStateEnum.MOVING);
                         }
                         // skip the move state
-                        if (placeTokenCounter == tokens.length && millTokenCounter == flyCondition){
+                        if (placeTokenCounter == tokens.length && millTokenCounter == flyCondition) {
                             setState(PlayerStateEnum.FLYING);
                         }
                     }
@@ -137,7 +143,7 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
                 // Iterate through the tokens array using an index
                 for (int i = 0; i < tokens.length; i++) {
                     // Check if the current token in the array is equal to the token from the event context
-                    if (tokens[i].equals(t)){
+                    if (tokens[i].equals(t)) {
                         // Set the current token in the array to a "dead" state
                         tokens[i].goDie();
                         // Increment the millTokenCounter
@@ -160,9 +166,8 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
                     }
                 }
             }
-        }else if (type == EventType.BOARD_CHANGE) {
-            if (event.getEventContext().getClass().isArray()
-                    && Position.class.isAssignableFrom(event.getEventContext().getClass().getComponentType())) {
+        } else if (type == EventType.BOARD_CHANGE) {
+            if (event.getEventContext().getClass().isArray() && Position.class.isAssignableFrom(event.getEventContext().getClass().getComponentType())) {
                 // init and casting event context to Position[] type
                 Position[] positions = (Position[]) event.getEventContext();
 
@@ -170,9 +175,7 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
                 positionsCache = positions;
             }
 
-            if (event.getEventContext().getClass().isArray()
-                    && Position.class.isAssignableFrom(event.getEventContext().getClass().getComponentType())
-                    && getState() == PlayerStateEnum.MOVING) {
+            if (event.getEventContext().getClass().isArray() && Position.class.isAssignableFrom(event.getEventContext().getClass().getComponentType()) && getState() == PlayerStateEnum.MOVING) {
                 // init the check point
                 Boolean isDeadEnd = true;
 
@@ -185,46 +188,46 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
                 // check all own tokens set in board
                 int allTokensNum = 0;
                 for (Token token : tokens) {
-                    if (token.getOwner() != null){
+                    if (token.getOwner() != null) {
                         allTokensNum += 1;
                     }
                 }
                 for (Position position : positions) {
-                    if (!position.isEmpty()){
-                        if(position.peekToken().getOwner().getUid().equals(getUid())){
+                    if (!position.isEmpty()) {
+                        if (position.peekToken().getOwner().getUid().equals(getUid())) {
                             allTokensNum -= 1;
                         }
                     }
                 }
 
-                if (allTokensNum == 0){
+                if (allTokensNum == 0) {
                     // using a counter to avoid the non-token end point
                     int counter = 0;
                     // check and modify the check dead end
                     for (int i = 0; i < positions.length; i++) {
-                        if (!positions[i].isEmpty()){
-                            if (positions[i].peekToken().getOwner().getUid().equals(getUid())){
+                        if (!positions[i].isEmpty()) {
+                            if (positions[i].peekToken().getOwner().getUid().equals(getUid())) {
                                 counter += 1;
                                 for (Integer integer : validMovesMap.get(i)) {
-                                    if (positions[integer].isEmpty()){
+                                    if (positions[integer].isEmpty()) {
                                         isDeadEnd = false;
                                         break;
                                     }
                                 }
                             }
                         }
-                        if (isDeadEnd == false){
+                        if (isDeadEnd == false) {
                             break;
                         }
                     }
 
-                    if (counter == 0){
+                    if (counter == 0) {
                         isDeadEnd = false;
                     }
 
 
                     // check is deadEnd
-                    if (isDeadEnd){
+                    if (isDeadEnd) {
                         // Set the player's state to FAILED
                         setState(PlayerStateEnum.FAILED);
 
@@ -323,7 +326,7 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
     /**
      * get the state of the player
      *
-     * @return
+     * @return state
      */
     @Override
     public PlayerStateEnum getState() {
@@ -560,10 +563,10 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
         int numberOfPositions = Integer.parseInt(MillTriggerConfigBundle.getString("numberOfPositions"));
 
         //initialising triggerNodeMap
-        triggerNodeMap=new HashMap<>();
+        triggerNodeMap = new HashMap<>();
         // init the key for triggerNodeMap
         for (int i = 0; i < numberOfPositions; i++) {
-            triggerNodeMap.put(i,new ArrayList<>());
+            triggerNodeMap.put(i, new ArrayList<>());
         }
 
         // read the number of lines
@@ -573,7 +576,7 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
         for (int line = 0; line < lines; line++) {
             // create search key
             String key = String.valueOf(line);
-            if (MillTriggerConfigBundle.containsKey(key)){
+            if (MillTriggerConfigBundle.containsKey(key)) {
                 // according to the key to get the mill position
                 String millStr = MillTriggerConfigBundle.getString(key);
 
@@ -589,17 +592,26 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
         }
     }
 
+
+    /**
+     * getter for positionCache
+     *
+     * @return positionCache
+     */
     @Override
     public Position[] getPositionsCache() {
         return positionsCache;
     }
 
+    /**
+     * @return list of coordinate that are valid for Placing
+     */
     @Override
     public List<Coordinate> getPlaceableOptions() {
         List<Coordinate> options = new ArrayList<>();
 
         for (int i = 0; i < this.getPositionsCache().length; i++) {
-            if (positionsCache[i].isEmpty()){
+            if (positionsCache[i].isEmpty()) {
                 options.add(positionCoordinateMapping.get(i));
             }
         }
@@ -607,15 +619,19 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
         return options;
     }
 
+    /**
+     * @return list of coordinates that are valid for Moving
+     */
+
     @Override
     public List<Coordinate[]> getMovableOptions() {
         List<Coordinate[]> options = new ArrayList<>();
 
         for (int i = 0; i < this.getPositionsCache().length; i++) {
-            if (!positionsCache[i].isEmpty()){
-                if (positionsCache[i].peekToken().getOwner().getUid().equals(getUid())){
+            if (!positionsCache[i].isEmpty()) {
+                if (positionsCache[i].peekToken().getOwner().getUid().equals(getUid())) {
                     for (Integer integer : validMovesMap.get(i)) {
-                        if (positionsCache[integer].isEmpty()){
+                        if (positionsCache[integer].isEmpty()) {
                             Coordinate[] coordinates = new Coordinate[2];
                             coordinates[0] = positionCoordinateMapping.get(i);
                             coordinates[1] = positionCoordinateMapping.get(integer);
@@ -630,15 +646,18 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
         return options;
     }
 
+    /**
+     * @return list of coordinates that are valid for Flying
+     */
     @Override
     public List<Coordinate[]> getFlyableOptions() {
         List<Coordinate[]> options = new ArrayList<>();
 
         for (int i = 0; i < this.getPositionsCache().length; i++) {
-            if (!positionsCache[i].isEmpty()){
-                if (positionsCache[i].peekToken().getOwner().getUid().equals(getUid())){
+            if (!positionsCache[i].isEmpty()) {
+                if (positionsCache[i].peekToken().getOwner().getUid().equals(getUid())) {
                     for (int j = 0; j < this.getPositionsCache().length; j++) {
-                        if (positionsCache[j].isEmpty()){
+                        if (positionsCache[j].isEmpty()) {
                             Coordinate[] coordinates = new Coordinate[2];
                             coordinates[0] = positionCoordinateMapping.get(i);
                             coordinates[1] = positionCoordinateMapping.get(j);
@@ -653,6 +672,10 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
         return options;
     }
 
+    /**
+     * @return list of coordinates that are valid for Killing after a Mill is formed
+     */
+
     @Override
     public List<Coordinate> getRemovableOptions() {
         List<Coordinate> options = new ArrayList<>();
@@ -660,26 +683,26 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
         // check all opponent's tokens is in mill
         Boolean isAllOthersTokenInMill = true;
         for (int i = 0; i < this.getPositionsCache().length; i++) {
-            if (!positionsCache[i].isEmpty()){
-                if (!positionsCache[i].peekToken().getOwner().getUid().equals(getUid())){
+            if (!positionsCache[i].isEmpty()) {
+                if (!positionsCache[i].peekToken().getOwner().getUid().equals(getUid())) {
                     List<Integer> nodeMapSnapshot = triggerNodeMap.get(i);
                     Integer couter = 0;
                     for (Integer integer : nodeMapSnapshot) {
-                        if (trigger.getTriggerNodeState(integer)){
+                        if (trigger.getTriggerNodeState(integer)) {
                             couter += 1;
                         }
                     }
-                    if (couter == 0){
+                    if (couter == 0) {
                         isAllOthersTokenInMill = false;
                     }
                 }
             }
         }
 
-        if (isAllOthersTokenInMill){
+        if (isAllOthersTokenInMill) {
             for (int i = 0; i < this.getPositionsCache().length; i++) {
-                if (!positionsCache[i].isEmpty()){
-                    if (!positionsCache[i].peekToken().getOwner().getUid().equals(getUid())){
+                if (!positionsCache[i].isEmpty()) {
+                    if (!positionsCache[i].peekToken().getOwner().getUid().equals(getUid())) {
                         options.add(positionCoordinateMapping.get(i));
                     }
                 }
@@ -687,16 +710,16 @@ public class AIModelImpl implements AIPlayerModel, EventListener, EventSource {
 
         } else {
             for (int i = 0; i < this.getPositionsCache().length; i++) {
-                if (!positionsCache[i].isEmpty()){
-                    if (!positionsCache[i].peekToken().getOwner().getUid().equals(getUid())){
+                if (!positionsCache[i].isEmpty()) {
+                    if (!positionsCache[i].peekToken().getOwner().getUid().equals(getUid())) {
                         List<Integer> nodeMapSnapshot = triggerNodeMap.get(i);
                         Integer couter = 0;
                         for (Integer integer : nodeMapSnapshot) {
-                            if (trigger.getTriggerNodeState(integer)){
+                            if (trigger.getTriggerNodeState(integer)) {
                                 couter += 1;
                             }
                         }
-                        if (couter == 0){
+                        if (couter == 0) {
                             options.add(positionCoordinateMapping.get(i));
                         }
                     }

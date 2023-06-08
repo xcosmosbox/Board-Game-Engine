@@ -14,6 +14,7 @@ import java.util.*;
 
 /**
  * PlayerModelImpl class implements the PlayerModel and EventListener interfaces.
+ * @version 1.0
  */
 public class PlayerModelImpl implements PlayerModel, EventListener, EventSource {
 
