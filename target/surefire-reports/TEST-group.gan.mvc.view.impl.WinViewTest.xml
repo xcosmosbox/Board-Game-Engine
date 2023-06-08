@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="1" failures="0" name="group.gan.mvc.view.impl.WinViewTest" time="0.001" errors="0" skipped="0">
+<testsuite tests="1" failures="0" name="group.gan.mvc.view.impl.WinViewTest" time="0.019" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="java.vm.version" value="18.0.2+9-FR"/>
@@ -60,5 +60,5 @@
     <property name="java.vendor.version" value="Corretto-18.0.2.9.1"/>
     <property name="sun.stdout.encoding" value="UTF-8"/>
   </properties>
-  <testcase classname="group.gan.mvc.view.impl.WinViewTest" name="draw" time="0.001"/>
+  <testcase classname="group.gan.mvc.view.impl.WinViewTest" name="draw" time="0.019"/>
 </testsuite>

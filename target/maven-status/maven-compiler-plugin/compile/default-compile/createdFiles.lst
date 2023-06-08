@@ -1,3 +1,4 @@
+group/gan/mvc/model/player/AIPlayerModel.class
 group/gan/mvc/controller/board/Board.class
 group/gan/exception/InvalidCoordinate.class
 group/gan/mvc/model/board/trigger/impl/BoardMillTriggerImpl.class
@@ -17,6 +18,7 @@ group/gan/mvc/controller/command/CommandType.class
 group/gan/mvc/model/coordinate/impl/CoordinateImpl.class
 group/gan/events/EventListener.class
 group/gan/mvc/view/factory/impl/PlacePhaseViewFactory.class
+group/gan/mvc/model/player/impl/AIModelImpl.class
 group/gan/mvc/model/game/state/GameState.class
 group/gan/utils/CommandTypeConverter.class
 group/gan/mvc/controller/player/Player.class
@@ -52,8 +54,10 @@ group/gan/mvc/controller/command/factory/impl/MillCommandFactory.class
 group/gan/events/impl/BoardModelChangeEvent.class
 group/gan/mvc/model/position/Position.class
 group/gan/mvc/model/player/PlayerModel.class
+group/gan/mvc/controller/player/impl/InitDescribeType.class
 group/gan/events/impl/MillingEvent.class
 group/gan/mvc/view/factory/impl/WinViewFactory.class
+group/gan/mvc/controller/player/impl/AIPlayerImpl.class
 group/gan/mvc/view/impl/FlyPhaseView.class
 group/gan/mvc/model/board/trigger/impl/MillNode.class
 group/gan/mvc/controller/move/impl/FlyingStrategy.class

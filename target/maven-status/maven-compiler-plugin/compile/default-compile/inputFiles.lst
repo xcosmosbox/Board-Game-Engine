@@ -33,10 +33,12 @@
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/controller/turn/Pollable.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/model/game/rule/GameRule.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/view/factory/impl/BoardViewFactory.java
+/Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/model/player/AIPlayerModel.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/view/impl/PlayerInfoView.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/controller/game/Game.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/exception/InvalidTokenChoose.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/view/factory/impl/IntroViewFactory.java
+/Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/model/player/impl/AIModelImpl.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/model/game/state/GameState.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/view/impl/FlyPhaseView.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/view/factory/impl/ShowRuleViewFactory.java
@@ -52,6 +54,7 @@
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/view/impl/MovePhaseView.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/controller/command/impl/MillCommand.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/view/factory/impl/PlayerInfoViewFactory.java
+/Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/controller/player/impl/InitDescribeType.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/utils/CommandTypeConverter.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/view/impl/ShowRuleWordOnly.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/controller/move/impl/MillStrategy.java
@@ -81,6 +84,7 @@
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/controller/board/impl/BoardImpl.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/model/game/GameModel.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/view/impl/PlacePhaseView.java
+/Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/controller/player/impl/AIPlayerImpl.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/controller/board/Board.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/controller/command/impl/MoveCommand.java
 /Users/fengyuxiang/IdeaProjects/FIT3077_Game/FIT3077_Game/src/main/java/group/gan/mvc/controller/command/factory/impl/QuitCommandFactory.java
