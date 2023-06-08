@@ -1,0 +1,13 @@
+## 4. Design Rationale
+
+### 4.1 Explain why you have designed the architecture for the advanced requirement(s) the way you have
+
+We did not modify the architecture for advanced functionality. From the beginning of the design of our design, we believed that the advanced function itself was only an extension of the basic function. Therefore, at the beginning of the design, we thought we needed to design a highly scalable architecture. Based on this theory, when we designed the entire game architecture, we blurred the specific details of the 9MM game, but focused on a more abstract and common level. This is why our architecture is designed from the interface layer, and it is also the reason why we choose full interface development.
+
+The existing architecture designed based on this concept can not only expand advanced functions, we can even expand from 9MM games to chess. And such an extension does not lead to a modification of the architecture.
+
+When we need to use the existing architecture to implement advanced functions, we can start from the interface layer to analyze how to extend advanced functions. Since our team chose to include AI players as our advanced feature. Therefore, we need to start thinking about how to implement it from the Player in the interface. Since we implemented the MVC architecture at the same time, the Player does not directly touch the game. This makes the Player less granular. We only need to use a brand new class to implement the Player interface and implement different functional details. AI Player has the same winning and losing conditions as Human Player. They can perform the same operations in rounds, so we don't need to modify most of the functions.
+
+The only difference is that whenever Turn requests a Coordinate input from Player, Human Player needs to request real input from Scanner. The AI player needs to provide its own AI Player Model with options that can be operated. Since the event monitoring interface is provided in this architecture, the AI Player Model can easily monitor the information on the chessboard to provide the AI Player Controller with operable options.
+
+The above is the process of implementing advanced functions based on the existing architecture. Due to the excellent extensibility of our original architecture, advanced functionality only involves two new classes and one interface. And did not modify the code in Sprint3. To sum up, we have completed the development of advanced functions in a non-invasive, lightweight, and agile manner under the premise of perfectly satisfying the Open and Closed Principle (OCP).
