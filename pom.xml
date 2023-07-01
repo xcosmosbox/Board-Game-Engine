@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>gan</groupId>
-    <artifactId>FIT3077_Game</artifactId>
+    <artifactId>Board_Game_Framework</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
