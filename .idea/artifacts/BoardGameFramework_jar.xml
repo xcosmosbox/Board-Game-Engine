@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact name="BoardGameFramework:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BoardGameFramework_jar</output-path>
+    <root id="root">
+      <element id="archive" name="BoardGameFramework.jar">
+        <element id="module-output" name="BoardGameFramework" />
+      </element>
+    </root>
+  </artifact>
+</component>
