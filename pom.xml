@@ -26,7 +26,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>group.gan.Application</mainClass>
+                            <mainClass>examples.Application</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
