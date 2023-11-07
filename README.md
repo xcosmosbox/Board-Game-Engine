@@ -34,7 +34,7 @@ Implementing this engine implements a classic tabletop game: Nine Men's Morris
 
 Clean Example Class File:
 
-```bash
+```
 > mvn clean
 ```
 
